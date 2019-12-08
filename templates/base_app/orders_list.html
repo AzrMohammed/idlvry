@@ -1,0 +1,207 @@
+{% extends "base_app/base.html" %}
+{% block body_block %}
+
+
+<div class="float-left col-md-12 no-padding">
+    <div class="col-12 col-md-4 float-left pl_0">
+    <h1 class="header_title float-left mt_15 mb_15">Orders </h1>
+  </div>
+  <div class="col-md-8 col-12 float-right pr_0 mb_15">
+    <input type="email" class="form-control float-left col-md-8 mt_15" placeholder="Search here..">
+    <button type="button" data-toggle="modal" data-target="#create_order_form_parent" class="mt_15 btn primary_btn float-right">Create an Order</button>
+  </div>
+
+<div class="common_container pt_0">
+  <div class="table-responsive">
+      <table class="table">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Customer Name</th>
+              <th>Order Items</th>
+              <th>Delivery Location</th>
+              <th>Delivery Agent Name</th>
+              <th>Booked on</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for order in orders %}
+              <tr>
+                <td>{{ order.order_meta.order_id }}</td>
+                <td>{{ order.order_foreign.user_customer.user }}</td>
+                <td>{{ order.order_meta.order_items }}</td>
+                <td>{{ order.order_foreign.user_customer.user_location_display }}</td>
+                <td>{{ order.order_foreign.user_delivery_agent }}</td>
+                <td>{{ order.order_meta.created_at }}</td>
+                <td>{{ order.order_meta.status }}</td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+  </div>
+</div>
+
+
+
+{% if orders.has_other_pages %}
+  <!-- <ul class="pagination">
+    {% if orders.has_previous %}
+      <li><a href="?page={{ users.previous_page_number }}">&laquo;</a></li>
+    {% else %}
+      <li class="disabled"><span>&laquo;</span></li>
+    {% endif %}
+    {% for i in orders.paginator.page_range %}
+      {% if order.number == i %}
+        <li class="active"><span>{{ i }} <span class="sr-only">(current)</span></span></li>
+      {% else %}
+        <li><a href="?page={{ i }}">{{ i }}</a></li>
+      {% endif %}
+    {% endfor %}
+    {% if orders.has_next %}
+      <li><a href="?page={{ users.next_page_number }}">&raquo;</a></li>
+    {% else %}
+      <li class="disabled"><span>&raquo;</span></li>
+    {% endif %}
+  </ul> -->
+  <nav aria-label="Page navigation example">
+      <ul class="pagination">
+        {% if orders.has_previous %}
+        <li class="page-item"><a class="page-link" href="?page={{ users.previous_page_number }}">Previous</a></li>
+        {% else %}
+        <li class="page-item disabled"><a class="page-link" href="#">Previous</a></li>
+        {% endif %}
+        {% for i in orders.paginator.page_range %}
+          {% if orders.number == i %}
+        <li class="page-item active"><a class="page-link" href="#"><span>{{ i }}</span></a> </li>
+        {% else %}
+        <li class="page-item"><a class="page-link" href="?page={{ i }}">{{ i }}</a></li>
+        {% endif %}
+        {% endfor %}
+        {% if orders.has_next %}
+        <li class="page-item"><a class="page-link" href="?page={{ users.next_page_number }}">Next </a></li>
+        {% else %}
+        <!-- <li class="disabled"><span>&raquo;</span></li> -->
+        <li class="page-item disabled"><a class="page-link" href="#">Next</a></li>
+        {% endif %}
+      </ul>
+    </nav>
+
+
+{% endif %}
+
+<!-- order create alert -->
+
+<div class="modal fade" id="create_order_form_parent" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog model_create_order" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Create an Order</h5>
+
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+
+          <form action="/order_create/" method="POST" name="create_order_form" id="create_order_form">
+            {% csrf_token %}
+            <div class="col-md-5 float-left no-padding col-12">
+                <h1 class="primary_title float-left mb_10 w-100">Primary Information</h1>
+              <div class="form-group col-md-6 pl_0 float-left">
+                <label for="exampleInputEmail1">Name</label>
+                <input type="text" class="form-control" name="username" id="username"  placeholder="Name" >
+              </div>
+              <div class="form-group col-md-6 pl_0 float-left">
+                <label for="exampleInputEmail1">Phone Number</label>
+                <input type="number" max_length="10" class="form-control" name="phone_primary" id="phone_primary"  placeholder="Phone Number">
+              </div>
+              <div class="form-group col-md-6 pl_0 float-left">
+                <label for="exampleInputEmail1">Area</label>
+                <input type="text" class="form-control" name="location_area" id="location_area"  placeholder="Area">
+              </div>
+              <div class="form-group col-md-6 pl_0 float-left">
+                <label for="exampleInputEmail1">Address line 1</label>
+                <input type="text" class="form-control" name="location_sublocality" id="location_sublocality"  placeholder="Address line 1">
+              </div>
+              <div class="form-group col-md-6 pl_0 float-left">
+                <label for="exampleInputEmail1">Address line 2</label>
+                <input type="text" class="form-control" name="location_locality" id="location_locality" placeholder="Address line 2">
+              </div>
+              <div class="form-group col-md-6 pl_0 float-left">
+                <label for="exampleInputEmail1">City</label>
+                <input type="text" class="form-control" name="location_city" id="location_city"  placeholder="City">
+              </div>
+              <div class="form-group col-md-6 pl_0 float-left">
+                <label for="exampleInputEmail1">Pincode</label>
+                <input type="number" max_length="6" class="form-control" name="location_pincode" id="location_pincode"  placeholder="Pincode">
+              </div>
+              <div class="form-group col-md-6 pl_0 float-left">
+                <label for="exampleInputEmail1">State</label>
+                <select class="form-control" id="location_state" name="location_state">
+                  {% for key, value in state_list.items %}
+                  <option value="{{key}}"> {{value}} </option>
+                  {% endfor %}
+                </select>
+              </div>
+              <div class="form-group col-md-8 pl_0 float-left">
+                <label for="exampleInputEmail1">Assign delivery Agent</label>
+                <select class="form-control" id="user_delivery_agent" name="user_delivery_agent">
+                  {% for delivery_agent in delivery_agents_list %}
+                  <option value="{{delivery_agent.user}}"> {{delivery_agent.user}} </option>
+                  {% endfor %}
+                </select>
+              </div>
+              <span id="error_el" class="error_msg_box"></span>
+              <span id="success_el" class="success_msg_box"></span>
+            </div>
+            <!--END of USER form Data-->
+            <!-- product list alert -->
+            <div class="col-md-7 float-left pr_0 col-12" style="">
+                <h1 class="primary_title float-left mb_10">Product Requirment</h1>
+                <button type="button" onclick="getOrderItemComponent()" class="add_more float-right">+ Add More Items</button>
+              <div id="order_item_list_parent" >
+                <ul id="ole" class="product_list">
+                  <li>
+                    <div class="product_list">
+                    <div class="form-group col-md-8 pl_0 float-left">
+                    <label for="exampleInputEmail1">1. Items name / product name (ಉತ್ಪನ್ನದ ಹೆಸರು)</label>
+                    <input type="text" class="form-control" id="item_name" name="item_name" placeholder="Write down the requirment">
+
+                    </div>
+                    <div class="form-group col-md-2 pl_0 float-left">
+                    <label for="exampleInputEmail1">Quantity</label>
+                    <input type="number" class="form-control" id="item_quantity" name="item_quantity" placeholder="Quantity">
+                    </div>
+                    <div class="form-group col-md-2 pl_0 float-left">
+                    <label for="">UNIT</label>
+                    <select class="form-control" id="measurement_unit" name="measurement_unit">
+                    {% for measurements in measurements_list %}
+                    <option value="{{measurements.name}}"> {{measurements.name}} </option>
+                    {% endfor %}
+                    </select>
+                    </div>
+                  </li>
+                </ul>
+              </div>
+            </div>
+            <!-- ======== End of product list alert -->
+
+            
+
+
+          </form>
+        </div>
+        <!--BODY END HERE-->
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary float-left" data-dismiss="modal">Close</button>
+          <button type="button" onclick="createOrder()" class="btn primary_btn float-right">Place Order</button>
+          <!-- <button type="button" onclick="createOrder()" class="btn primary_btn float-right">Place Order</button> -->
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+
+{% endblock %}
