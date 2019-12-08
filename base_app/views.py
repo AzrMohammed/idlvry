@@ -173,7 +173,7 @@ def index(request):
 
     today = datetime.date.today()
 
-    base_dict = {"order_count":order_count, "delivery_boy_count":delivery_boy_count, "order_delivered":order_delivered_count, "customers_count":customers_count, "delivery_agents":users, 'pic_server_prefix':'http://127.0.0.1:8000/media/' }
+    base_dict = {"order_count":order_count, "delivery_boy_count":delivery_boy_count, "order_delivered":order_delivered_count, "customers_count":customers_count, "delivery_agents":users, 'pic_server_prefix':'http://http://167.71.126.94:8000/media/' }
     return render(request, 'base_app/index.html', context = base_dict)
 
 @login_required
@@ -237,7 +237,7 @@ def delivery_agents(request):
         users = paginator.page(1)
     except EmptyPage:
         users = paginator.page(paginator.num_pages)
-    return render(request, 'base_app/delivery_agents.html',  {'state_list':dbconstants.STATE_LIST_DICT, 'users': users, 'pic_server_prefix':'http://127.0.0.1:8000/media/' })
+    return render(request, 'base_app/delivery_agents.html',  {'state_list':dbconstants.STATE_LIST_DICT, 'users': users, 'pic_server_prefix':'http://167.71.126.94:8000/media/' })
 
 @login_required
 def orders_list(request):
