@@ -12,9 +12,13 @@
   <script src="../static/js/jquery-3.4.1.js"></script>
   <link rel="stylesheet" href="../static/css/main.css">
   <!-- <script src="http://code.jquery.com/jquery-3.4.1.min.js"></script> -->
-  <script src="{% static "js/delivery_agents.js" %}" > </script>
+  <script src="{% static "js/delivery_agents.js" %}" > </script>\
+    <!-- window.location.replace($('#login_success').val()); -->
+
 </head>
-<body>
+<!-- window.location.replace("{% url 'base_app:login' %}").val()); -->
+<body onload="loginCheck('{{ user.is_authenticated }}');" >
+  <input type="hidden" id="login_url" value="{% url 'base_app:login' %}" />
   <div class="row">
   <div class="col-12 left_sidebar col-md-2">
     <div class="logo"><img src="../static/images/logo.svg" alt=""></div>
@@ -40,6 +44,7 @@
             {% if user.is_authenticated %}
             <a  class="text-right w-100 float-right" href="{% url 'base_app:logout' %}">{{ user.username }} ( Logout ) </a>
             {% else %}
+
             <a  href="{% url 'base_app:login' %}">Login</a>
             {% endif %}
         </div>

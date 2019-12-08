@@ -1,4 +1,27 @@
 
+// window.onload = function() {
+//  alert("let's go!");
+// }
+
+function loginCheck (is_loggedin)
+{
+
+  // alert("Cakked== "+ is_loggedin);
+// let d = new Date();
+//    alert("Today's date is " + d);
+  if(is_loggedin == 'True')
+   {
+     // alert("aa");
+   }
+  else
+  {
+      window.location.replace($('#login_url').val());
+  // alert("aab");
+  }
+
+
+}
+
 
 function deActivateUser(username)
 {
@@ -100,7 +123,7 @@ function proceedEdit(username)
 
 is_edit = true;
 
-alert(username);
+// alert(username);
 
 var csrftoken = getCookie('csrftoken');
 $.ajax({
@@ -203,7 +226,7 @@ $.ajax({
           if(data.SUCCESS)
            {
 
-             alert(JSON.stringify(data))
+             // alert(JSON.stringify(data))
 
              data_usermeta = JSON.parse(data.user_meta)[0]
              data_user_profile = JSON.parse(data.user_profile)[0]
@@ -213,7 +236,7 @@ $.ajax({
              if(!(is_edit))
              id_suffix = "_v";
              // data_usermeta = data_json[0]
-             alert(JSON.stringify(data_usermeta))
+             // alert(JSON.stringify(data_usermeta))
 
              $("#pk"+id_suffix).val(data_usermeta.pk)
              $("#username"+id_suffix).text(data_usermeta.fields.username)
@@ -329,7 +352,7 @@ function processResponse(data)
   {
 
 
-    alert(JSON.stringify(data.ERRORS))
+    // alert(JSON.stringify(data.ERRORS))
     $('#error_el').text(data.ERRORS)
 
   }
@@ -341,7 +364,7 @@ function createOrder()
 
   var formData = $(form).serialize();
   var url = form.attr('action');
-  alert(JSON.stringify(formData));
+  // alert(JSON.stringify(formData));
 
       $.ajax({
              type: "POST",
@@ -393,7 +416,7 @@ function getDaDetails()
              if(data.SUCCESS)
               {
 
-                alert(JSON.stringify(data))
+                // alert(JSON.stringify(data))
 
                 data_usermeta = JSON.parse(data.user_meta)[0]
                 data_user_profile = JSON.parse(data.user_profile)[0]
@@ -403,7 +426,7 @@ function getDaDetails()
                 if(!(is_edit))
                 id_suffix = "_v";
                 // data_usermeta = data_json[0]
-                alert(JSON.stringify(data_usermeta))
+                // alert(JSON.stringify(data_usermeta))
 
                 $("#pk"+id_suffix).val(data_usermeta.pk)
                 $("#username"+id_suffix).val(data_usermeta.fields.username)
@@ -474,7 +497,7 @@ function getOrderItemComponent()
   html_content += '</div>';
   html_content += '<div class="form-group col-md-2 pl_0 float-left">';
   html_content += '<label for="exampleInputEmail1">Quantity</label>';
-  html_content += '<input type="number" class="form-control" id="item_quantity" name="item_quantity" placeholder="Quantity">';
+  html_content += '<input type="number" class="form-control" id="item_quantity" value="1" name="item_quantity" placeholder="Quantity">';
   html_content += '</div>';
   html_content += '<div class="form-group col-md-2 pl_0 float-left">';
   html_content += '<label for="">UNIT</label>';
