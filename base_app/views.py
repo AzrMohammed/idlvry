@@ -468,10 +468,11 @@ def order_create(request):
         print("came create order" +str(post_data))
 
 
-
-        post_data["first_name"] = request.POST["username"]
-        post_data["email"] = request.POST["username"]+"@idelivery.com"
-        post_data["password"] = request.POST["username"]+"@123"
+        usernamet = request.POST["username"]
+        post_data["first_name"] = usernamet
+        post_data["username"] = usernamet.replace(" ", "")
+        post_data["email"] = post_data["username"]+"@idelivery.com"
+        post_data["password"] = post_data["username"]+"@123"
         post_data["phone_secondary"] = "0000000000"
 
         user_form = UserForm(data=post_data)
