@@ -373,7 +373,8 @@ function createOrder()
              data: form.serialize(), // serializes the form's elements.
              success: function(data)
              {
-              processResponse(data)
+               alert(JSON.stringify(data))
+              // processResponse(data)
 
              }
            });
@@ -394,6 +395,38 @@ function openDaRegisterForm()
 
 
 
+
+}
+
+function getOrderDetails()
+{
+  // get_order_details
+  var csrftoken = getCookie('csrftoken');
+ $.ajax({
+        type: "POST",
+        url: $("#order_fetch").val(),
+        headers: {"X-CSRFToken": csrftoken},
+        // url: "/get_da_details/",
+        data: {order_id:"O19UH0I7"}, // serializes the form's elements.
+        success: function(data)
+        {
+
+          // $('#registerBoyView').modal('toggle');
+            alert(JSON.stringify(data)); // show response from the php script.
+            if(data.SUCCESS)
+             {
+
+
+
+
+             }
+            else
+            {
+              // alert(JSON.stringify(data.ERRORS))
+            }
+
+        }
+      });
 
 }
 
@@ -490,19 +523,25 @@ function getOrderItemComponent()
 {
 
 
+  var count_order_items = $("#ole li").length;
+  alert(count_order_items);
+  var current_index = count_order_items+1;
+
   var html_content = '<li>';
   html_content += '<div class="form-group col-md-8 pl_0 float-left">';
   html_content += '<label for="exampleInputEmail1">1. Items name / product name (ಉತ್ಪನ್ನದ ಹೆಸರು)</label>';
-  html_content += '<input type="text" class="form-control" id="item_name" name="item_name" placeholder="Write down the requirment">';
+  html_content += '<input type="text" class="form-control" id="item_name" name="item_name_'+current_index+'" placeholder="Write down the requirment">';
   html_content += '</div>';
   html_content += '<div class="form-group col-md-2 pl_0 float-left">';
   html_content += '<label for="exampleInputEmail1">Quantity</label>';
-  html_content += '<input type="number" class="form-control" id="item_quantity" value="1" name="item_quantity" placeholder="Quantity">';
+  html_content += '<input type="number" class="form-control" id="item_quantity" value="1" name="item_quantity_'+current_index+'" placeholder="Quantity">';
   html_content += '</div>';
   html_content += '<div class="form-group col-md-2 pl_0 float-left">';
   html_content += '<label for="">UNIT</label>';
-  var cont = document.getElementById("measurement_unit").outerHTML;
+  html_content += '<select class="form-control" id="measurement_unit" name="measurement_unit_'+current_index+'">';
+  var cont = document.getElementById("measurement_unit").innerHTML;
   html_content += cont;
+  html_content += '</select>';
   html_content += '</div>';
   html_content += '</li>';
 

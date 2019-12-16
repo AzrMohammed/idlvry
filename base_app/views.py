@@ -563,55 +563,43 @@ def order_create(request):
 
             # create order item
 
-
-            item_name_list = request.POST.getlist("item_name")
-            measurement_unit_list = request.POST.getlist("measurement_unit")
-            item_quantity_list = request.POST.getlist("item_quantity")
-
-            print("sampled"+measurement_unit_list[0])
-            print("sampledaw"+str(len(item_name_list)))
+            count_item_default = 1
 
             order_items = ". Items : "
-            item_count = len(item_name_list)
-            i=0
-            # order_
-            while i<item_count :
 
-                print("came for=="+str(i))
-                order_item_model_form = OrderItemForm()
+            proceed_order_loop = True
+            while proceed_order_loop:
 
-                print("mmunit :"+post_data["measurement_unit"])
-                # order_item_model_form.item_name = item_name_list[i]
-                # order_item_model_form.item_quantity = item_quantity_list[i]
-                # order_item_model_form.measurement_unit =   ItemMeasuementUnit.objects.get(name=measurement_unit_list[i])
+                item_def = 'item_name_'+str(count_item_default)
+                if item_def in post_data:
+                    item_name = post_data["item_name_"+str(count_item_default)]
+                    measurement_unit = post_data["measurement_unit_"+str(count_item_default)]
+                    item_quantity =  post_data["item_quantity_"+str(count_item_default)]
 
-                # if order_item_model_form.is_valid():
-                print("camess ss")
-                order_item_model =  OrderItem()
-                order_item_model.item_name = item_name_list[i]
-                order_item_model.item_quantity = item_quantity_list[i]
-                order_item_model.measurement_unit =   ItemMeasuementUnit.objects.get(name=measurement_unit_list[i])
+                    print("came for=="+str(count_item_default))
+                    order_item_model_form = OrderItemForm()
 
 
-                if i > 0 :
-                    order_items +=  ", "
-                order_items +=  item_name_list[i] + " "+ item_quantity_list[i]+ " "+ measurement_unit_list[i]
-
-                # order_item_model_form.save(commit=False)
-                order_item_model.slug = unique_slug_generator(order_item_model)
-                order_item_model.order_item_id = unique_order_item_id_generator(order_item_model)
-                order_item_model.measurement_unit = ItemMeasuementUnit.objects.get(name=measurement_unit_list[i])
-                order_item_model.order = order_model
-                i+=1
-                order_item_model.save()
-                # else:
-                #     print("camess no")
-                #     i+=1
-                #     errors_dict = order_item_model_form.errors
-                #     return HttpResponse(json.dumps({"SUCCESS":False, "RESPONSE_MESSAGE":"ERRORS", "ERRORS": errors_dict}),
-                #     content_type="application/json")
+                    print("camess ss")
+                    order_item_model =  OrderItem()
+                    order_item_model.item_name = item_name
+                    order_item_model.item_quantity = item_quantity
+                    order_item_model.measurement_unit =   ItemMeasuementUnit.objects.get(name=measurement_unit)
 
 
+                    if count_item_default > 1 :
+                        order_items +=  ", "
+                    order_items +=  item_name + " "+ item_quantity + " "+ measurement_unit
+
+                    # order_item_model_form.save(commit=False)
+                    order_item_model.slug = unique_slug_generator(order_item_model)
+                    order_item_model.order_item_id = unique_order_item_id_generator(order_item_model)
+                    order_item_model.measurement_unit = ItemMeasuementUnit.objects.get(name=measurement_unit)
+                    order_item_model.order = order_model
+                    count_item_default+=1
+                    order_item_model.save()
+                else :
+                    proceed_order_loop = False
 
             # create order item ends
 
@@ -637,6 +625,83 @@ def order_create(request):
 #
 # def grouped(iterable, n):
 #     return izip(*[iter(iterable)]*n)
+
+
+def get_order_details(request):
+
+    if request.method == "POST":
+        print("came rewwww")
+        print(request.POST)
+        # order_list_final = []
+        order_temp = Order.objects.get(order_id=request.POST["order_id"])
+
+        user_customer_m =User.objects.get(username = order_temp.user_customer)
+        user_customer = UserProfileInfo.objects.get(user = user_customer_m)
+
+        user_delivery_agent_m =User.objects.get(username = order_temp.user_delivery_agent)
+        user_delivery_agent = UserProfileInfo.objects.get(user=user_delivery_agent_m)
+
+        user_customer.user_location_display = user_customer.location_area +','+user_customer.location_sublocality+","+user_customer.location_city+","+user_customer.location_pincode
+
+
+        # getting order item
+
+        order_items = OrderItem.objects.filter(order = order_temp)
+        # print("sizeaaa:"+ str(order_items.count()))
+
+        item_name =""
+
+        for order_item in order_items:
+            if item_name != '':
+                item_name += ", "+order_item.item_name
+            else:
+                item_name += order_item.item_name
+
+        order_temp.order_items = item_name
+
+        # getting status text
+        order_temp.status = dbconstants.ORDER_STATUS_DIC[order_temp.status]
+
+
+# .only('e_name','e_date')
+
+        order_foreign = {}
+        # order_foreign['user_customer'] = serializers.serialize('json', [user_customer])
+        # order_foreign['user_delivery_agent'] = serializers.serialize('json', [user_delivery_agent])
+
+        # print(order_foreign)
+        #
+        #
+        # order_parent_set = {}
+        # order_parent_set['order_meta'] = order_temp
+        # order_parent_set['order_foreign'] =  order_foreign
+        #
+        # order_list_final.append(order_parent_set)
+
+        # user_obj = User.objects.get(username=request.POST["username"])
+        # user_profile = UserProfileInfo.objects.get(user=user_obj)
+        # da_profile = DaProfile.objects.get(user=user_profile)
+        # user_obj_s = serializers.serialize('json', [user_obj])
+        # user_profile_s = serializers.serialize('json', [user_profile])
+
+        # user_list_final = []
+        # user_list_final.append(order_parent_set)
+        # order_details_l = serializers.serialize('json', order_parent_set)
+        #
+
+        user_customer_s = serializers.serialize('json', [user_customer])
+        user_delivery_agent_s = serializers.serialize('json', [user_delivery_agent])
+        order_meta_s = serializers.serialize('json', [order_temp])
+
+        return HttpResponse(json.dumps({"SUCCESS":True, "RESPONSE_MESSAGE":"DATA FETCHED", "user_customer":user_customer_s, "user_delivery_agent":user_delivery_agent_s, "order_meta":order_meta_s }),
+            content_type="application/json")
+
+    else:
+        errors_dict = {"DATA":"Not a valid data"}
+        return HttpResponse(json.dumps({"SUCCESS":False, "RESPONSE_MESSAGE":"INVALID DATA", "ERRORS":getErrorMessage(errors_dict)}),
+            content_type="application/json")
+
+
 
 
 def get_da_details(request):
@@ -672,48 +737,54 @@ def register(request):
         is_create = True
 
         if(request.POST["pk"]):
+            user = User.objects.get(pk=request.POST["pk"])
             is_create = False
+            user_form = UserFormDa(request.POST, request.FILES, instance=user)
+
+            profile = UserProfileInfo.objects.get(user=user)
+            profile_form = UserProfileInfoFormDa(data=request.POST, instance=profile)
+
+            da_profile = DaProfile.objects.get(user=profile)
+
+            da_profile_form = DaProfileForm(request.POST, request.FILES, instance=da_profile)
 
 
-        # print("aaaaaa registur is create "+ str(is_create))
+        else:
+            user_form = UserFormDa(request.POST, request.FILES)
+            profile_form = UserProfileInfoFormDa(data=request.POST)
+            da_profile_form = DaProfileForm(request.POST, request.FILES)
 
-        # for filename, file in request.FILES.iteritems():
-            # name = request.FILES[filename].name
-
-        user_form = UserFormDa(request.POST, request.FILES)
-        profile_form = UserProfileInfoFormDa(data=request.POST)
-        da_profile_form = DaProfileForm(request.POST, request.FILES)
+        # user_form = UserFormDa(request.POST, request.FILES)
+        # profile_form = UserProfileInfoFormDa(data=request.POST)
+        # da_profile_form = DaProfileForm(request.POST, request.FILES)
 
 
 
 
         if user_form.is_valid() and profile_form.is_valid() and da_profile_form.is_valid():
 
+            user = user_form.save()
 
             if is_create :
-                print( "came createaaaaaaa")
-                user = user_form.save()
                 user.set_password(user.password)
-            else :
-                print( "came updateaaaaaaa")
-                user = User.objects.get(pk=request.POST["pk"])
-                user = user_form.save()
 
+            # else :
+            #     print( "came updateaaaaaaa")
+            #     user = User.objects.get(pk=request.POST["pk"])
+            #     user = user_form.save()
+
+            user = user_form.save()
 
             user.save()
 
 
+            profile = profile_form.save(commit=False)
 
             if is_create:
-                profile = profile_form.save(commit=False)
                 profile.user_type = dbconstants.USER_TYPE_DELIVERY_AGENT
                 profile.slug = unique_slug_generator(profile)
                 profile.ref_id = unique_ref_id_generator(profile)
                 profile.user = user
-            else:
-
-                profile = UserProfileInfo.objects.get(user=user)
-                profile = profile_form.save(commit=False)
 
             profile.location_state = request.POST["location_state"]
 
@@ -726,13 +797,12 @@ def register(request):
 
 
 
+            da_profile = da_profile_form.save(commit=False)
+
             if is_create:
-                da_profile = da_profile_form.save(commit=False)
                 da_profile.slug = unique_slug_generator(da_profile)
-                da_profile.user = profile
-            else:
-                da_profile = DaProfile.objects.get(user=profile)
-                da_profile = da_profile_form.save(commit=False)
+
+            da_profile.user = profile
 
 
             if 'rc_pic' in request.FILES:
@@ -748,7 +818,13 @@ def register(request):
             da_profile.save()
 
             registered = True
-            return HttpResponse(json.dumps({"SUCCESS":True, "RESPONSE_MESSAGE":"Delivery Agent Registered successfully"}),
+
+            if is_create :
+                sucess_message = "Delivery Agent Registered successfully"
+            else:
+                sucess_message = "Delivery Agent Details updated successfully"
+
+            return HttpResponse(json.dumps({"SUCCESS":True, "RESPONSE_MESSAGE":sucess_message}),
             content_type="application/json")
         else:
             print(user_form.errors, profile_form.errors)
