@@ -367,7 +367,7 @@ thead {
 }
 .table td, .table th {
     padding: 0.75rem;
-    vertical-align: top;
+    vertical-align: middle;
     border-top: 1px solid #E8E8E8;
     padding-top: 20px;
     padding-bottom: 20px;
@@ -503,7 +503,9 @@ ul.product_list>li {
 .second_color {
     color: var(--second);
 }
-
+.grey_color {
+    color: var(--grey);
+}
 .regular {
     font-family: 'regular' !important;
 }
