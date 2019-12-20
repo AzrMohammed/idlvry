@@ -1,4 +1,5 @@
 /base_app/migrations/*
 db.sqlite3
 /base_app/_pycache_/*
+/base_app/media/*
 /ideliver/_pycache_/*

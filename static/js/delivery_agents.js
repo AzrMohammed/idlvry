@@ -197,7 +197,7 @@ $.ajax({
            }
           else
           {
-            // alert(JSON.stringify(data.ERRORS))
+            alert(JSON.stringify(data.ERRORS))
           }
 
       }
@@ -293,6 +293,10 @@ $.ajax({
 
 }
 
+
+
+
+
 function getCookie(name) {
     var cookieValue = null;
     if (document.cookie && document.cookie !== '') {
@@ -309,6 +313,32 @@ function getCookie(name) {
     return cookieValue;
 }
 
+
+function registerCustomerCare() {
+var form = $('#register_customer_care_form');
+
+var formData = $(form).serialize();
+var url = form.attr('action');
+
+ $('#error_el').val("")
+ $('#success_el').val("")
+
+    $.ajax({
+           type: "POST",
+           url: url,
+           enctype:"multipart/form-data",
+           data: new FormData(document.getElementById("register_customer_care_form")), // serializes the form's elements.
+           processData: false,
+           contentType: false,
+           success: function(data)
+           {
+               // alert(JSON.stringify(data)); // show response from the php script.
+               processResponse(data)
+
+           }
+         });
+
+}
 
 function registerAgent() {
 var form = $('#register_agent_form');
@@ -335,6 +365,8 @@ var url = form.attr('action');
          });
 
 }
+
+
 
 function processResponse(data)
 {
@@ -398,31 +430,96 @@ function openDaRegisterForm()
 
 }
 
+
+function openDaRegisterCustomerCareForm()
+{
+  $('#registerBoy').modal('toggle');
+
+  var id_suffix = "";
+
+  $("#profile_pic_v"+id_suffix).hide()
+  $("#driving_liscence_pic_v"+id_suffix).hide()
+  $("#pan_card_pic_v"+id_suffix).hide()
+  $("#rc_pic_v"+id_suffix).hide()
+
+
+
+
+}
+
 function getOrderDetails()
 {
-  // get_order_details
-  var csrftoken = getCookie('csrftoken');
+
+ var csrftoken = getCookie('csrftoken');
  $.ajax({
         type: "POST",
         url: $("#order_fetch").val(),
         headers: {"X-CSRFToken": csrftoken},
         // url: "/get_da_details/",
-        data: {order_id:"O19UH0I7"}, // serializes the form's elements.
+        data: {order_id:'O19DLGRG'}, // serializes the form's elements.
         success: function(data)
         {
-
-          // $('#registerBoyView').modal('toggle');
-            alert(JSON.stringify(data)); // show response from the php script.
+          $('#create_order_form_parent').modal('toggle');
+            // alert(JSON.stringify(data)); // show response from the php script.
             if(data.SUCCESS)
              {
 
+               alert(JSON.stringify(data))
+               final_data = JSON.parse(JSON.stringify(data))
+               response_message = final_data.RESPONSE_MESSAGE
+               data_order_meta = final_data.order_meta
+               data_customer_meta = final_data.user_customer.meta
+               data_customer_profile = final_data.user_customer.profile[0]
+               data_delivery_agent_meta = final_data.user_delivery_agent.meta
+               data_delivery_agent_profile = final_data.user_delivery_agent.profile[0]
 
+
+
+
+               $("#item_name").val(JSON.stringify(data))
+
+               $("#username").val(data_customer_meta['username']);
+               $("#phone_primary").val(data_customer_profile['phone_primary'])
+               $("#location_city").val(data_customer_profile['location_city'])
+               $("#location_locality").val(data_customer_profile['location_locality'])
+               $("#location_area").val(data_customer_profile['location_area'])
+               $("#location_sublocality").val(data_customer_profile['location_sublocality'])
+               $("#location_pincode").val(data_customer_profile['location_pincode'])
+               $("#location_state").val(data_customer_profile['location_pincode'])
+
+               var state_key = data_customer_profile['location_state'];
+               var state_key_val = "";
+               console.log(state_key);
+
+               var mapped_state = $('#location_state option').map(function() {
+               var obj_state = {};
+               obj_state[this.value] = this.textContent;
+               // alert("came opt"+this.value)
+               if(state_key == this.value)
+                 {
+                   // alert("came opts=="+this.value)
+                   state_key_val = this.value;
+                 }
+               return obj_state;
+             });
+
+
+  // http://127.0.0.1:8000/media/
+
+              // alert("Selected val==="+state_key_val+"==")
+
+               $("#location_state").val(state_key_val)
+
+
+
+
+               // $("#first_name"+id_suffix).val(data_usermeta.fields.first_name)
 
 
              }
             else
             {
-              // alert(JSON.stringify(data.ERRORS))
+              alert(JSON.stringify(data.ERRORS))
             }
 
         }
@@ -449,7 +546,7 @@ function getDaDetails()
              if(data.SUCCESS)
               {
 
-                // alert(JSON.stringify(data))
+                alert(JSON.stringify(data))
 
                 data_usermeta = JSON.parse(data.user_meta)[0]
                 data_user_profile = JSON.parse(data.user_profile)[0]

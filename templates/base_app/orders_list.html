@@ -10,7 +10,7 @@
     <input type="hidden" id="order_fetch" value="{% url 'base_app:get_order_details' %}" />
 
   <div class="col-md-8 col-12 float-right pr_0 mb_15">
-    <input type="email" class="form-control float-left col-md-8 mt_15" placeholder="Search here..">
+    <input type="email" id="search_input" class="form-control float-left col-md-8 mt_15" placeholder="Search here..">
     <button type="button" data-toggle="modal" data-target="#create_order_form_parent" class="mt_15 btn primary_btn float-right">Create an Order</button>
     <button type="button" onclick="getOrderDetails()" class="mt_15 btn primary_btn float-right">Get Details</button>
     <!-- getOrderDetails -->
