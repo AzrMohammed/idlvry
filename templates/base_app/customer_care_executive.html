@@ -5,14 +5,14 @@
 
   <input type="hidden" id="da_fetch" value="{% url 'base_app:get_da_details' %}" />
 
+
   <input type="hidden" id="pic_server_prefix" value="{{ pic_server_prefix }}" />
   <div class="col-12 col-md-4 float-left pl_0">
-    <h1 class="header_title float-left mt_15 w-100">Delivery Agents</h1>
-    <span class="font_14 float-left grey_color">Showing 220 delivery boy</span>
+    <h1 class="header_title float-left mt_15 mb_15">Customer care executives</h1>
   </div>
   <div class="col-md-8 float-right pr_0 mb_15">
     <input type="email" class="form-control float-left col-md-8 mt_15" placeholder="Search here..">
-    <button type="button"  onclick="openDaRegisterForm()" class="mt_15 btn primary_btn float-right">Register a Boy</button>
+    <button type="button"  onclick="openDaRegisterCustomerCareForm()" class="mt_15 btn primary_btn float-right">Register a Boy</button>
 
 
   </div>
@@ -25,7 +25,7 @@
           <tr>
             <th></th>
             <th>Employee ID</th>
-            <th>Delivery Boy</th>
+            <th>Customer Care Boy</th>
             <th>Area</th>
             <th>Locality</th>
             <th>Phone Number</th>
@@ -109,18 +109,23 @@
 
 <!-- registration dialog starts -->
 
+
+
+
+<!-- da view -->
+
 <div class="modal fade" id="registerBoy" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog model_register_boy" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Register a Delivery Boy</h5>
+        <h5 class="modal-title" id="exampleModalLabel">Register a  Customer Care</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
       <div class="modal-body">
         <h1 class="primary_title float-left mb_10 w-100">Primary Information  / ಪ್ರಾಥಮಿಕ ಮಾಹಿತಿ </h1>
-        <form   action="/register/" method="POST" name="register_agent_form" id="register_agent_form">
+        <form   action="/register_customer_care/" method="POST" name="register_agent_form" id="register_agent_form">
           {% csrf_token %}
 
           <input type="hidden" class="form-control" name="pk" id="pk"  placeholder="User Name" >
@@ -160,7 +165,6 @@
             <label for="exampleInputEmail1">Delivery Area (Locality) </label>
             <input type="text" class="form-control" name="location_area" id="location_area"  placeholder="Delivery Area">
           </div>
-
           <div class="col-md-12 no-padding float-left">
             <h1 class="primary_title float-left mb_10 w-100">Permanent Address / ಶಾಶ್ವತ ವಿಳಾಸ</h1>
             <div class="form-group col-md-3 pl_0 float-left">
@@ -243,14 +247,11 @@
 </div>
 
 
-<!-- da view -->
-
-
 <div class="modal fade" id="registerBoyView" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog model_register_boy" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="da_view_title">Delivery Boy</h5>
+        <h5 class="modal-title" id="da_view_title">Customer Care </h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>

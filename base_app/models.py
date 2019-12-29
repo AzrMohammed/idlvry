@@ -23,7 +23,7 @@ class UserProfileInfo(models.Model):
     location_city = models.CharField(max_length=80, unique=False, default=dbconstants.VAL_STR_DEFAULT)
     location_state = models.CharField(max_length=80, unique=False, choices=dbconstants.STATE_LIST, default=dbconstants.STATE_KARNATAKA)
     location_pincode = models.CharField(max_length=6, unique=False, default=dbconstants.VAL_STR_DEFAULT)
-    user_type = models.CharField(max_length=2, choices=dbconstants.USER_TYPES, default = dbconstants.USER_TYPE_DELIVERY_AGENT)
+    user_type = models.CharField(max_length=3, choices=dbconstants.USER_TYPES, default = dbconstants.USER_TYPE_DELIVERY_AGENT)
 
     user_status = models.CharField(max_length=2, choices=dbconstants.USER_STATUS, default=dbconstants.USER_STATUS_ACTIVE)
     status = models.CharField(max_length=2, choices=dbconstants.STATUS,  default=dbconstants.STATUS_ACTIVE)
@@ -83,7 +83,7 @@ class ItemMeasuementUnit(models.Model):
 
 
 
-class Order(models.Model):
+class Order(models.Model):  
 
 
     slug = models.SlugField(unique=True, max_length=8)
