@@ -11,11 +11,8 @@
   <div class="col-md-8 col-12 float-right pr_0 mb_15">
     <input type="email" id="search_input" class="form-control float-left col-md-8 mt_15" placeholder="Search here..">
     <button type="button" data-toggle="modal" data-target="#create_order_form_parent" class="mt_15 btn primary_btn float-right">Create an Order</button>
-<<<<<<< HEAD
+
     <button type="button" onclick="getOrderDetails()" class="mt_15 btn primary_btn float-left">Get Details</button>
-=======
-    <button type="button" onclick="" class="mt_15 btn primary_btn float-right">Get Details</button>
->>>>>>> 5465b5fce61a94df36ea4c6e0b207f052fbbb57f
     <!-- getOrderDetails -->
   </div>
 
@@ -37,7 +34,7 @@
           <tbody>
             {% for order in orders %}
               <tr>
-<<<<<<< HEAD
+
                 <td style="width:5%;">{{ order.order_meta.order_id }}</td>
                 <td style="width:8%;">{{ order.order_foreign.user_customer.user }}</td>
                 <td style="width:25%;">{{ order.order_meta.order_items }}</td>
@@ -46,19 +43,9 @@
                 <td style="width:10%;">{{ order.order_meta.created_at }}</td>
                 <td style="width:12%;">{{ order.order_meta.status }}</td>
                 <td style="width:13%;">
-                  <input type="hidden" value="{{ order.order_meta.slug }}" /> 
-                  <button  onclick="proceedEdit('{{ order.order_meta.slug }}')" type="button" name="button" class="float-left"> Edit</button> 
+                  <input type="hidden" value="{{ order.order_meta.slug }}" />
+                  <button  onclick="proceedEdit('{{ order.order_meta.slug }}')" type="button" name="button" class="float-left"> Edit</button>
                   <button  onclick="proceedView('{{ order.order_meta.slug }}')" type="button" name="button" class="float-left"> View</button> </td>
-=======
-                <td>{{ order.order_meta.order_id }}</td>
-                <td>{{ order.order_foreign.user_customer.user }}</td>
-                <td>{{ order.order_meta.order_items }}</td>
-                <td>{{ order.order_foreign.user_customer.user_location_display }}</td>
-                <td>{{ order.order_foreign.user_delivery_agent }}</td>
-                <td>{{ order.order_meta.created_at }}</td>
-                <td>{{ order.order_meta.status }}</td>
-                <td><input type="hidden" value="{{ order.order_meta.slug }}" /> <button  onclick="getOrderDetails('{{ order.order_meta.order_id }}')" type="button" name="button"> Edit</button> <button  onclick="viewEachOrderDetail('{{ order.order_meta.order_id }}')" type="button" name="button"> View</button> </td>
->>>>>>> 5465b5fce61a94df36ea4c6e0b207f052fbbb57f
               </tr>
             {% endfor %}
           </tbody>
