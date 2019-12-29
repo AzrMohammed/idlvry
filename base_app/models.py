@@ -83,7 +83,7 @@ class ItemMeasuementUnit(models.Model):
 
 
 
-class Order(models.Model):
+class Order(models.Model):  
 
 
     slug = models.SlugField(unique=True, max_length=8)

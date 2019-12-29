@@ -12,7 +12,7 @@
   <div class="col-md-8 col-12 float-right pr_0 mb_15">
     <input type="email" id="search_input" class="form-control float-left col-md-8 mt_15" placeholder="Search here..">
     <button type="button" data-toggle="modal" data-target="#create_order_form_parent" class="mt_15 btn primary_btn float-right">Create an Order</button>
-    <button type="button" onclick="getOrderDetails()" class="mt_15 btn primary_btn float-right">Get Details</button>
+    <button type="button" onclick="" class="mt_15 btn primary_btn float-right">Get Details</button>
     <!-- getOrderDetails -->
   </div>
 
@@ -41,7 +41,7 @@
                 <td>{{ order.order_foreign.user_delivery_agent }}</td>
                 <td>{{ order.order_meta.created_at }}</td>
                 <td>{{ order.order_meta.status }}</td>
-                <td><input type="hidden" value="{{ order.order_meta.slug }}" /> <button  onclick="proceedEdit('{{ order.order_meta.slug }}')" type="button" name="button"> Edit</button> <button  onclick="proceedView('{{ order.order_meta.slug }}')" type="button" name="button"> View</button> </td>
+                <td><input type="hidden" value="{{ order.order_meta.slug }}" /> <button  onclick="getOrderDetails('{{ order.order_meta.order_id }}')" type="button" name="button"> Edit</button> <button  onclick="viewEachOrderDetail('{{ order.order_meta.order_id }}')" type="button" name="button"> View</button> </td>
               </tr>
             {% endfor %}
           </tbody>
@@ -115,6 +115,8 @@
             {% csrf_token %}
             <div class="col-md-5 float-left no-padding col-12">
                 <h1 class="primary_title float-left mb_10 w-100">Primary Information</h1>
+                <input type="hidden" class="form-control" name="pk" id="pk"  placeholder="User Name" >
+
               <div class="form-group col-md-6 pl_0 float-left">
                 <label for="exampleInputEmail1">Customer Name</label>
                 <input type="text" class="form-control" name="username" id="username"  placeholder="Full Name" >
@@ -166,7 +168,7 @@
             <!-- product list alert -->
             <div class="col-md-7 float-left pr_0 col-12" style="">
                 <h1 class="primary_title float-left mb_10">Product Requirment</h1>
-                <button type="button" onclick="getOrderItemComponent()" class="add_more float-right">+ Add More Items</button>
+                  <button type="button" onclick="getOrderItemComponent()" class="add_more float-right">+ Add More Items</button>
               <div id="order_item_list_parent" >
                 <ul id="ole" class="product_list">
                   <li>
@@ -178,7 +180,7 @@
                     </div>
                     <div class="form-group col-md-2 pl_0 float-left">
                     <label for="exampleInputEmail1">Quantity</label>
-                    <input type="number" value="1" class="form-control" id="item_quantity_1" name="item_quantity_1" placeholder="Quantity">
+                    <input type="number" value="1" class="form-control" id="item_quantity" name="item_quantity_1" placeholder="Quantity">
                     </div>
                     <div class="form-group col-md-2 pl_0 float-left">
                     <label for="">UNIT</label>
@@ -208,6 +210,106 @@
       </div>
     </div>
   </div>
+
+
+<!-- order view alert -->
+
+<div class="modal fade" id="order_view_alrt" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog model_register_boy" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="da_view_title">View order</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+
+          {% csrf_token %}
+
+
+          <div class="col-md-5 float-left no-padding col-12">
+              <h1 class="primary_title float-left mb_10 w-100">Primary Information</h1>
+              <input type="hidden" class="form-control" name="pk" id="pk"  placeholder="User Name" >
+
+            <div class="form-group col-md-6 pl_0 float-left">
+              <label for="exampleInputEmail1">Customer Name</label>
+              <span class="font_14 float-left" id="customer_name_v" > </span>
+            </div>
+            <div class="form-group col-md-6 pl_0 float-left">
+              <label for="exampleInputEmail1">Phone Number</label>
+              <span class="font_14 float-left" id="phone_primary_v" > </span>
+            </div>
+            <div class="form-group col-md-6 pl_0 float-left">
+              <label for="exampleInputEmail1">Delivery Locality</label>
+              <span class="font_14 float-left" id="location_area_v" > </span>
+             </div>
+            <div class="form-group col-md-6 pl_0 float-left">
+              <label for="exampleInputEmail1">Street Name </label>
+              <span class="font_14 float-left" id="location_sublocality_v" > </span>
+            </div>
+            <div class="form-group col-md-6 pl_0 float-left">
+              <label for="exampleInputEmail1">Landmark (optional) </label>
+              <span class="font_14 float-left" id="location_locality_v" > </span>
+            </div>
+            <div class="form-group col-md-6 pl_0 float-left">
+              <label for="exampleInputEmail1">City</label>
+              <span class="font_14 float-left" id="location_city_v" > </span>
+            </div>
+            <div class="form-group col-md-6 pl_0 float-left">
+              <label for="exampleInputEmail1">Pincode</label>
+              <span class="font_14 float-left" id="locality_pincode_v" > </span>
+            </div>
+            <div class="form-group col-md-6 pl_0 float-left">
+              <label for="exampleInputEmail1">State</label>
+              <span class="font_14 float-left" id="location_state_v" > </span>
+            </div>
+            <div class="form-group col-md-8 pl_0 float-left">
+              <label for="exampleInputEmail1">Assign delivery Agent</label>
+              <span class="font_14 float-left" id="user_delivery_agent_v" > </span>
+            </div>
+            <span id="error_el" class="error_msg_box"></span>
+            <span id="success_el" class="success_msg_box"></span>
+          </div>
+          <!--END of USER form Data-->
+          <!-- product list alert -->
+          <div class="col-md-7 float-left pr_0 col-12" style="">
+              <h1 class="primary_title float-left mb_10">Product Requirment</h1>
+                    <div id="order_item_list_parent" >
+              <ul id="olea" class="product_list">
+                <li>
+                  <div class="product_list">
+                  <div class="form-group col-md-8 pl_0 float-left">
+                  <label for="exampleInputEmail1">1. Items name / product name (ಉತ್ಪನ್ನದ ಹೆಸರು)</label>
+                  <span class="font_14 float-left" id="item_name_v" > </span>
+                  </div>
+                  <!-- <div class="form-group col-md-2 pl_0 float-left">
+                  <label for="exampleInputEmail1">Quantity</label>
+                  <span class="font_14 float-left" id="item_quentity_1_v" > </span>
+                  </div> -->
+                  <div class="form-group col-md-2 pl_0 float-left">
+                  <label for="">UNIT</label>
+                  <span class="font_14 float-left" id="measurement_unit_v" > </span>
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </div>
+
+        </div>
+
+      <div>
+      </div>
+
+      </div><!--BODY END HERE-->
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary float-left" data-dismiss="modal">Close</button>
+
+      </div>
+    </div>
+  </div>
+</div>
+<!-- da view ends  -->
 
 
 

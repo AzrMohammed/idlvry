@@ -38,7 +38,7 @@
             <img src="/static/images/logo.svg" alt="">
           <span class="font_14 second_color w-100 float-left mt_30">WELCOME BACK</span>
           <h1 class="header_title float-left mb_20 w-100">Login to your account</h1>
-          <form id="login_form" action="{% url 'base_app:login' %}" method="post">
+          <form id="login_form" action="{% url 'base_app:login' %}" method="POST">
 
             {% csrf_token %}
 

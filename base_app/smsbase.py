@@ -14,6 +14,7 @@ def sendOrderCreationMessage(**kwargs):
 # (order_number = order_model.order_id, order_items = "Shampoo, Rice", customer_name = profile.user ,
  # customer_mobile = profile.phone_primary, da_name = user_del.username, da_mobile = da_profile.phone_primary)
     base_url = "https://api.msg91.com/api/sendhttp.php?route=4&sender=IDLVRY&country=91&authkey=304757AYVqJYJdk54G5dd4ce8e"
+    base_url = "aaa"
     # customer_name = "Aiyappa"
     # customer_mobile = "9080349072"
     # da_name = "Da1"
