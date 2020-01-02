@@ -29,8 +29,8 @@
             <th>Area</th>
             <th>Locality</th>
             <th>Phone Number</th>
-            <th>Status</th>
             <th>Actions</th>
+            <th>Status</th>
 
           </tr>
         </thead>
@@ -50,6 +50,8 @@
               <td>{{ user.user_profile.location_sublocality }}</td>
               <td>{{ user.user_profile.phone_primary }}</td>
               <!-- <td>{{ user.user_profile.user_status }}</td> -->
+
+              <td><input type="hidden" value="{{ user.user_meta.username }}" /> <button  onclick="proceedEdit('{{ user.user_meta.username }}')" type="button" name="button"> Edit</button> <button  onclick="proceedView('{{ user.user_meta.username }}')" type="button" name="button"> View</button> </td>
               <td>
                 {% if user.user_profile.user_status == "AT" %}
 
@@ -68,7 +70,7 @@
                 {% endif %}
 
               </td>
-              <td><input type="hidden" value="{{ user.user_meta.username }}" /> <button  onclick="proceedEdit('{{ user.user_meta.username }}')" type="button" name="button"> Edit</button> <button  onclick="proceedView('{{ user.user_meta.username }}')" type="button" name="button"> View</button> </td>
+
             </tr>
           {% endfor %}
         </tbody>
@@ -236,7 +238,7 @@
       </div><!--BODY END HERE-->
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary float-left" data-dismiss="modal">Close</button>
-        <button type="button" onclick="registerAgent()" class="btn primary_btn float-right">Add Agent</button>
+        <button type="button" id="btn_add_agent" onclick="registerAgent()" class="btn primary_btn float-right">Add Agent</button>
       </div>
     </div>
   </div>

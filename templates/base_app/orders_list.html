@@ -8,11 +8,12 @@
     <span class="font_14 float-left grey_color">Showing 120 order received</span>
   </div>
     <input type="hidden" id="order_fetch" value="{% url 'base_app:get_order_details' %}" />
+    <input type="hidden" id="url_order_status" value="{% url 'base_app:change_order_status' %}" />
   <div class="col-md-8 col-12 float-right pr_0 mb_15">
     <input type="email" id="search_input" class="form-control float-left col-md-8 mt_15" placeholder="Search here..">
-    <button type="button" data-toggle="modal" data-target="#create_order_form_parent" class="mt_15 btn primary_btn float-right">Create an Order</button>
+    <button type="button"  onclick="openDaOrderForm()" class="mt_15 btn primary_btn float-right">Create an Order</button>
 
-    <button type="button" onclick="getOrderDetails()" class="mt_15 btn primary_btn float-left">Get Details</button>
+    <!-- <button type="hidden" onclick="getOrderDetails()" class="mt_15 btn primary_btn float-left">Get Details</button> -->
     <!-- getOrderDetails -->
   </div>
 
@@ -41,11 +42,21 @@
                 <td style="width:17%;">{{ order.order_foreign.user_customer.user_location_display }}</td>
                 <td style="width:10%;">{{ order.order_foreign.user_delivery_agent }}</td>
                 <td style="width:10%;">{{ order.order_meta.created_at }}</td>
-                <td style="width:12%;">{{ order.order_meta.status }}</td>
+                <td style="width:12%;">
+                  <select class="from-control" name="order_status" id="order_status" onchange="updateOrderStatus('{{ order.order_meta.order_id }}')">
+                    {% for key, value in order_status_list.items %}
+                        {% if value == order.order_meta.status %}
+                             <option value="{{key}}" selected='selected'>{{value}}</option>
+                        {% else %}
+                             <option value="{{key}}">{{value}}</option>
+                        {% endif %}
+                    {% endfor %}
+                  </select>
+                </td>
                 <td style="width:13%;">
                   <input type="hidden" value="{{ order.order_meta.slug }}" />
-                  <button  onclick="proceedEdit('{{ order.order_meta.slug }}')" type="button" name="button" class="float-left"> Edit</button>
-                  <button  onclick="proceedView('{{ order.order_meta.slug }}')" type="button" name="button" class="float-left"> View</button> </td>
+                  <button  onclick="getOrderDetails('{{ order.order_meta.order_id }}')" type="button" name="button" class="float-left"> Edit</button>
+                  <button  onclick="viewEachOrderDetail('{{ order.order_meta.order_id }}')" type="button" name="button" class="float-left"> View</button> </td>
               </tr>
             {% endfor %}
           </tbody>
@@ -119,7 +130,7 @@
             {% csrf_token %}
             <div class="col-md-5 float-left no-padding col-12">
                 <h1 class="primary_title float-left mb_10 w-100">Primary Information</h1>
-                <input type="hidden" class="form-control" name="pk" id="pk"  placeholder="User Name" >
+                <input type="hidden" class="form-control" name="pk" id="pk"  placeholder="Order Id" >
 
               <div class="form-group col-md-6 pl_0 float-left">
                 <label for="exampleInputEmail1">Customer Name</label>
@@ -194,6 +205,8 @@
                     {% endfor %}
                     </select>
                     </div>
+                    <input type="hidden" class="form-control" name="item_pk_1" id="item_pk"  placeholder="Order Item Id" >
+
                   </li>
                 </ul>
               </div>
@@ -208,7 +221,7 @@
         <!--BODY END HERE-->
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary float-left" data-dismiss="modal">Close</button>
-          <button type="button" onclick="createOrder()" class="btn primary_btn float-right">Place Order</button>
+          <button type="button" id="btn_submit" onclick="createOrder()" class="btn primary_btn float-right">Place Order</button>
           <!-- <button type="button" onclick="createOrder()" class="btn primary_btn float-right">Place Order</button> -->
         </div>
       </div>
@@ -218,7 +231,7 @@
 
 <!-- order view alert -->
 
-<div class="modal fade" id="order_view_alrt" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal fade" id="order_view_alrt" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog model_register_boy" role="document">
     <div class="modal-content">
       <div class="modal-header">
@@ -280,17 +293,17 @@
           <div class="col-md-7 float-left pr_0 col-12" style="">
               <h1 class="primary_title float-left mb_10">Product Requirment</h1>
                     <div id="order_item_list_parent" >
-              <ul id="olea" class="product_list">
+              <ul id="ole_view" class="product_list">
                 <li>
                   <div class="product_list">
                   <div class="form-group col-md-8 pl_0 float-left">
                   <label for="exampleInputEmail1">1. Items name / product name (ಉತ್ಪನ್ನದ ಹೆಸರು)</label>
                   <span class="font_14 float-left" id="item_name_v" > </span>
                   </div>
-                  <!-- <div class="form-group col-md-2 pl_0 float-left">
+                  <div class="form-group col-md-2 pl_0 float-left">
                   <label for="exampleInputEmail1">Quantity</label>
-                  <span class="font_14 float-left" id="item_quentity_1_v" > </span>
-                  </div> -->
+                  <span class="font_14 float-left" id="item_quantity_v" > </span>
+                  </div>
                   <div class="form-group col-md-2 pl_0 float-left">
                   <label for="">UNIT</label>
                   <span class="font_14 float-left" id="measurement_unit_v" > </span>

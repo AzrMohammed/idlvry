@@ -11,6 +11,13 @@ class UserParentForm(forms.ModelForm):
         model = User
         fields = ('username', 'email', 'password')
         # exclude = ['username']
+class UserFormCustomer(forms.ModelForm):
+    password = forms.CharField(widget=forms.PasswordInput())
+
+    class Meta():
+        model = User
+        fields = ('username', 'email', 'password')
+        exclude = ['username']
 
 class UserForm(forms.ModelForm):
     password = forms.CharField(widget=forms.PasswordInput())
@@ -86,4 +93,4 @@ class OrderItemForm(forms.ModelForm):
     class Meta():
         model = OrderItem
         fields = ('measurement_unit', 'item_name', 'item_quantity')
-        exclude = ['measurement_unit']
+        exclude = ['measurement_unit','item_name','item_quantity']

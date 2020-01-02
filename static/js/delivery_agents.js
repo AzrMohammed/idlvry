@@ -124,7 +124,7 @@ function proceedEdit(username)
 
 is_edit = true;
 
-// alert(username);
+
 
 var csrftoken = getCookie('csrftoken');
 $.ajax({
@@ -140,7 +140,7 @@ $.ajax({
           if(data.SUCCESS)
            {
 
-             alert(JSON.stringify(data))
+             // alert(JSON.stringify(data))
 
              data_usermeta = JSON.parse(data.user_meta)[0]
              data_user_profile = JSON.parse(data.user_profile)[0]
@@ -150,9 +150,24 @@ $.ajax({
              if(!(is_edit))
              id_suffix = "_v";
              // data_usermeta = data_json[0]
-             alert(JSON.stringify(data_usermeta))
+             // alert(JSON.stringify(data_usermeta))
 
              $("#pk"+id_suffix).val(data_usermeta.pk)
+             if(($('input#header_type').val()) == "1"){
+               $("#exampleModalLabel").text("Update Customer Care Boy")
+               $("#btn_add_agent").html("UPDATE AGENT")
+               console.log("kdsdsdsals");
+
+             }else {
+               $("#exampleModalLabel").text("Update a Delivery Boy")
+               $("#btn_add_agent").html("UPDATE AGENT")
+               console.log("kdsdsdssdsdsals");
+
+             }
+
+             console.log("ksals");
+
+
              $("#username"+id_suffix).val(data_usermeta.fields.username)
              $("#first_name"+id_suffix).val(data_usermeta.fields.first_name)
              $("#email"+id_suffix).val(data_usermeta.fields.email)
@@ -380,9 +395,9 @@ function processResponse(data)
    $('#success_el').text(data.RESPONSE_MESSAGE)
 
    $('#register_agent_form').trigger("reset");
+   $('#create_order_form_parent').trigger("reset");
+
    window.setTimeout( location.reload(), 4000 );
-   ;
-     // alert("success"+data.RESPONSE_MESSAGE)
    }
   else
   {
@@ -421,6 +436,7 @@ function createOrder()
 
 function openDaRegisterForm()
 {
+
   $('#registerBoy').modal('toggle');
 
   var id_suffix = "";
@@ -430,7 +446,19 @@ function openDaRegisterForm()
   $("#pan_card_pic_v"+id_suffix).hide()
   $("#rc_pic_v"+id_suffix).hide()
 
+  $("#exampleModalLabel").text("Create a Delivery Boy")
+  $("#btn_add_agent").html("ADD AGENT")
 
+
+}
+
+function openDaOrderForm()
+{
+
+  $('#create_order_form_parent').modal('toggle');
+
+  $("#exampleModalLabel").text("Create an Order")
+  $("#btn_submit").html("Place Order")
 
 
 }
@@ -446,6 +474,10 @@ function openDaRegisterCustomerCareForm()
   $("#driving_liscence_pic_v"+id_suffix).hide()
   $("#pan_card_pic_v"+id_suffix).hide()
   $("#rc_pic_v"+id_suffix).hide()
+
+  $("#exampleModalLabel").text("Create a Customer Care Boy")
+  $("#btn_add_agent").html("ADD AGENT")
+
 
 
 
@@ -465,12 +497,14 @@ function getOrderDetails(orderid)
         data: {order_id: orderid}, // serializes the form's elements.
         success: function(data)
         {
+          // $( "#create_order_form_parent" ).load(location.href + " #create_order_form_parent" );
+
           $('#create_order_form_parent').modal('toggle');
             // alert(JSON.stringify(data)); // show response from the php script.
             if(data.SUCCESS)
              {
 
-               alert(JSON.stringify(data))
+               // alert(JSON.stringify(data))
                final_data = JSON.parse(JSON.stringify(data))
                console.log(final_data);
                response_message = final_data.RESPONSE_MESSAGE
@@ -483,8 +517,11 @@ function getOrderDetails(orderid)
 
 
 
+              // refresh div content
 
-               $("#item_name").val("")
+
+               $("#exampleModalLabel").text("Update an Order")
+               $("#btn_submit").html("UPDATE ORDER")
                $("#pk").val(data_order_meta['order_id'])
                $("#username").val(data_customer_meta['username']);
                $("#phone_primary").val(data_customer_profile['phone_primary'])
@@ -514,6 +551,11 @@ function getOrderDetails(orderid)
              $("#location_state").val(state_key_val)
 
 
+             var lis = document.querySelectorAll('#ole li');
+             for(var i=0; li=lis[i]; i++) {
+                 if(i!=0)
+                     li.parentNode.removeChild(li);
+             }
 
              for (i = 0; i < data_order_items.length; i++) {
 
@@ -525,6 +567,7 @@ function getOrderDetails(orderid)
 
                $("#item_name"+id_suffix).val(data_order_items[i]["item_name"])
                $("#item_quantity"+id_suffix).val(data_order_items[i]["item_quantity"])
+               $('#item_pk'+id_suffix).val(data_order_items[i]["order_item_id"])
 
                var measurement_unit = data_order_items[i]['measurement_unit'];
                var measurement_unit_val = "";
@@ -584,11 +627,12 @@ function viewEachOrderDetail(orderid)
              {
 
 
-               alert(JSON.stringify(data))
+               // alert(JSON.stringify(data))
                final_data = JSON.parse(JSON.stringify(data))
                console.log(final_data);
                response_message = final_data.RESPONSE_MESSAGE
                data_order_meta = final_data.order_meta
+               data_order_items = final_data.order_item
                data_customer_meta = final_data.user_customer.meta
                data_customer_profile = final_data.user_customer.profile[0]
                data_delivery_agent_meta = final_data.user_delivery_agent.meta
@@ -629,6 +673,33 @@ function viewEachOrderDetail(orderid)
 
                $("#location_state_v").text(state_key_val)
 
+
+
+               var lis = document.querySelectorAll('#ole_view li');
+               for(var i=0; li=lis[i]; i++) {
+                   if(i!=0)
+                       li.parentNode.removeChild(li);
+               }
+
+               for (i = 0; i < data_order_items.length; i++) {
+
+                 if(i != data_order_items.length-1)
+                    viewOrderItemComponent()
+
+                id = i+1
+                id_suffix = i == 0? "_v": "_v_"+id
+
+                $("#item_name"+id_suffix).text(data_order_items[i]["item_name"])
+                $("#item_quantity"+id_suffix).text(data_order_items[i]["item_quantity"])
+                $("#measurement_unit"+id_suffix).text(data_order_items[i]["measurement_unit"])
+
+
+
+               }
+
+
+
+
              }
             else
             {
@@ -664,7 +735,7 @@ function getDaDetails()
              if(data.SUCCESS)
               {
 
-                alert(JSON.stringify(data))
+                // alert(JSON.stringify(data))
 
                 data_usermeta = JSON.parse(data.user_meta)[0]
                 data_user_profile = JSON.parse(data.user_profile)[0]
@@ -730,8 +801,96 @@ function getDaDetails()
 }
 
 
+function updateOrderStatus(orderid){
+  var selected_order_status = $('#order_status').find(":selected").text();
+  console.log(selected_order_status);
+
+  var csrftoken = getCookie('csrftoken');
+
+  var url = $('#url_order_status').val()
+  console.log(url);
+
+      $.ajax({
+             type: "POST",
+             url: url,
+             headers: {"X-CSRFToken": csrftoken},
+             data: {"order_status":selected_order_status, "order_id":orderid}, // serializes the form's elements.
+             success: function(data)
+             {
+               alert(JSON.stringify(data))
+              // processResponse(data)
+             }
+           });
+}
+
+function getUserOrderDetails(username){
+
+  var csrftoken = getCookie('csrftoken');
+  var url = $('#url_user_order_details').val()
+  console.log(url);
+  $.ajax({
+         type: "POST",
+         url: url,
+         headers: {"X-CSRFToken": csrftoken},
+         data: {"user_name":username}, // serializes the form's elements.
+         success: function(data)
+         {
+           console.log("dsdsd");
+
+           if(data.SUCCESS){
+
+                alert(JSON.stringify(data));
+
+                final_data = JSON.parse(JSON.stringify(data))
+                response_message = final_data.RESPONSE_MESSAGE
+                data_order_detail= final_data.user_order_detail
+
+                if (data_order_detail.length == 0){
+                  alert("Not yet orderd");
+
+                }else {
+
+                  $('#user_order_view_alrt').modal('toggle');
+
+                  var lis = document.querySelectorAll('#item_table tr');
+                  console.log(lis);
+                  for(var i=0; tr=lis[i]; i++) {
+
+                          tr.parentNode.removeChild(tr);
+                  }
+
+                  for(var i = 0; i< data_order_detail.length; i++){
+
+                      userOrderListTable(i);
+                      $('#order_id_'+i).html(data_order_detail[i]["order_id"]);
+                      $('#order_item_'+i).html(data_order_detail[i]["item_name"]);
+                      $('#created_at_'+i).html(new Date(data_order_detail[i]["created_at"]).toISOString().slice(0, 16));
+                      $('#updated_at_'+i).html( new Date(data_order_detail[i]["updated_at"]).toISOString().slice(0, 16));
+
+                    }
+                }
 
 
+           }else {
+
+           }
+
+        }
+       });
+
+}
+
+
+function userOrderListTable(current_index){
+  var html_content = '<tr>';
+  html_content += '<td id="order_id_'+current_index+'" name="order_id_'+current_index+'" ></td>'
+  html_content += '<td id="order_item_'+current_index+'" name="order_item_'+current_index+'" ></td>'
+  html_content += '<td id="created_at_'+current_index+'" name="created_at_'+current_index+'" ></td>'
+  html_content += '<td id="updated_at_'+current_index+'" name="updated_at_'+current_index+'" ></td>'
+  html_content += '</tr>';
+  $("#item_table").append(html_content);
+
+}
 
 
 function getOrderItemComponent()
@@ -759,8 +918,38 @@ function getOrderItemComponent()
   html_content += cont;
   html_content += '</select>';
   html_content += '</div>';
+  html_content+= '<input type="hidden" class="form-control" name="item_pk_'+current_index+'" id="item_pk_'+current_index+'"  placeholder="Order Item Id" >';
   html_content += '</li>';
 
    $("#ole").append(html_content);
+
+}
+
+
+function viewOrderItemComponent()
+{
+
+
+  var count_order_items = $("#ole_view li").length;
+  // alert(count_order_items);
+  console.log(count_order_items);
+  var current_index = count_order_items+1;
+
+  var html_content = '<li>';
+  html_content += '<div class="form-group col-md-8 pl_0 float-left">';
+  html_content += '<label for="exampleInputEmail1">'+current_index+'. Items name / product name (ಉತ್ಪನ್ನದ ಹೆಸರು)</label>';
+  html_content += '<span class="font_14 float-left" id="item_name_v_'+current_index+'"> </span>';
+  html_content += '</div>';
+  html_content += '<div class="form-group col-md-2 pl_0 float-left">';
+  html_content += '<label for="exampleInputEmail1">Quantity</label>';
+  html_content += '<span class="font_14 float-left" id="item_quantity_v_'+current_index+'"></span>';
+  html_content += '</div>';
+  html_content += '<div class="form-group col-md-2 pl_0 float-left">';
+  html_content += '<label for="">UNIT</label>';
+  html_content += '<span class="font_14 float-left" id="measurement_unit_v_'+current_index+'"> </span>';
+  html_content += '</div>';
+  html_content += '</li>';
+
+  $("#ole_view").append(html_content);
 
 }

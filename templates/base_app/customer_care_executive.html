@@ -129,6 +129,7 @@
           {% csrf_token %}
 
           <input type="hidden" class="form-control" name="pk" id="pk"  placeholder="User Name" >
+          <input type="hidden" class="form-control" name="header_type" id="header_type"  value="1" >
           <div class="form-group col-md-3 pl_0 float-left">
             <label for="exampleInputEmail1">User Name</label>
             <input type="text" class="form-control" name="username" id="username"  placeholder="User Name" >
@@ -240,7 +241,7 @@
       </div><!--BODY END HERE-->
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary float-left" data-dismiss="modal">Close</button>
-        <button type="button" onclick="registerAgent()" class="btn primary_btn float-right">Add Agent</button>
+        <button type="button" id="btn_add_agent" onclick="registerAgent()" class="btn primary_btn float-right">Add Agent</button>
       </div>
     </div>
   </div>

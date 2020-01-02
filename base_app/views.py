@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.contrib.auth import authenticate
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
-from base_app.forms import UserProfileInfoForm, UserForm, UserFormDa, OrderForm, UserParentForm, UserProfileInfoFormDa, OrderItemForm, DaProfileForm
+from base_app.forms import UserFormCustomer, UserProfileInfoForm, UserForm, UserFormDa, OrderForm, UserParentForm, UserProfileInfoFormDa, OrderItemForm, DaProfileForm
 from django.contrib.auth import login as auth_login
 from django.contrib.auth import logout as auth_logout
 from django.contrib.auth.models import User
@@ -46,6 +46,23 @@ def change_user_status(request):
     user_profile.save()
 
     return HttpResponse(json.dumps({"SUCCESS":True, "RESPONSE_MESSAGE":"Status updated"}),
+    content_type="application/json")
+
+
+def change_order_status(request):
+
+    orderid = request.POST['order_id']
+    orderstatus = request.POST['order_status']
+
+    order_obj = Order.objects.get(order_id=orderid)
+    updated_order_sataus=""
+    for key, value in dbconstants.ORDER_STATUS:
+        if value == orderstatus:
+            updated_order_sataus= key
+    order_obj.status = updated_order_sataus
+    order_obj.save()
+
+    return HttpResponse(json.dumps({"SUCCESS":True, "RESPONSE_MESSAGE":"Order status updated"}),
     content_type="application/json")
 
 
@@ -111,8 +128,9 @@ def index(request):
     delivery_boy_count = UserProfileInfo.objects.filter(user_type = dbconstants.USER_TYPE_DELIVERY_AGENT).count()
 
     customers_count  = UserProfileInfo.objects.filter(user_type = dbconstants.USER_TYPE_CONSUMER).count()
+    customer_care_count  = UserProfileInfo.objects.filter(user_type = dbconstants.USER_TYPE_CUSTOMER_CARE_EXECUTIVE).count()
+    print(customer_care_count)
 
-    # delivery_boy_count = 0
 
     user_list = UserProfileInfo.objects.prefetch_related('user').filter(user_type = dbconstants.USER_TYPE_DELIVERY_AGENT)
     # user_list = User.objects.all().select_related('user_profile_info')
@@ -120,7 +138,7 @@ def index(request):
     # user_profile_list.
 
     user_list_final = []
-# aas
+
 
 
 
@@ -175,7 +193,7 @@ def index(request):
 
     today = datetime.date.today()
 
-    base_dict = {"order_count":order_count, "delivery_boy_count":delivery_boy_count, "order_delivered":order_delivered_count, "customers_count":customers_count, "delivery_agents":users, 'pic_server_prefix':'http://http://167.71.126.94:8000/media/' }
+    base_dict = {"order_count":order_count,"customer_care_count": customer_care_count, "delivery_boy_count":delivery_boy_count, "order_delivered":order_delivered_count, "customers_count":customers_count, "delivery_agents":users, 'pic_server_prefix':'http://http://167.71.126.94:8000/media/' }
     return render(request, 'base_app/index.html', context = base_dict)
 
 @login_required
@@ -184,11 +202,17 @@ def delivery_agents(request):
     # user_list = User.objects.filter(user_profile_info__user_type = dbconstants.DELIVERY_AGENT)
     # user_list = UserProfileInfo.objects.all().select_related('user')
     user_list = UserProfileInfo.objects.prefetch_related('user').filter(user_type = dbconstants.USER_TYPE_DELIVERY_AGENT).order_by('-updated_at')
+    # entry_list = len(UserProfileInfo.objects.all())
+    # print(str("ds")
+
     # user_list = User.objects.all().select_related('user_profile_info')
 
     # user_profile_list.
 
+
     user_list_final = []
+
+
 
 
 
@@ -334,6 +358,7 @@ def orders_list(request):
         item_name =""
 
         for order_item in order_items:
+
             if item_name != '':
                 item_name += ", "+order_item.item_name
             else:
@@ -376,7 +401,7 @@ def orders_list(request):
     state_list  = dbconstants.STATE_LIST_DICT
     measurements_list = ItemMeasuementUnit.objects.all()
     delivery_agents_list = UserProfileInfo.objects.prefetch_related('user').filter(user_type = dbconstants.USER_TYPE_DELIVERY_AGENT)
-
+    order_status_list = dbconstants.ORDER_STATUS_DIC
     # for meas in measurements_list:
     #     print("came print m"+meas.name)
     #
@@ -390,7 +415,7 @@ def orders_list(request):
         orders = paginator.page(1)
     except EmptyPage:
         orders = paginator.page(paginator.num_pages)
-    return render(request, 'base_app/orders_list.html',  { 'orders': orders, 'delivery_agents_list':delivery_agents_list, 'measurements_list':measurements_list, 'state_list':state_list })
+    return render(request, 'base_app/orders_list.html',  { 'orders': orders, 'delivery_agents_list':delivery_agents_list, 'measurements_list':measurements_list, 'state_list':state_list , 'order_status_list':order_status_list })
 
 
 
@@ -519,19 +544,50 @@ def Merge(dict1, dict2):
     (dict2.update(dict1))
     return dict2
 
-#
-# def getOrderItemComponemt(request):
-#
+def get_user_order_details(request):
+
+    if request.method == "POST":
+
+        request_user_name = request.POST["user_name"]
+
+        user = User.objects.get(username = request_user_name)
+        user_customer_m = UserProfileInfo.objects.get(user = user)
+        print(user_customer_m.slug)
 
 
+        order_list = Order.objects.filter(user_customer = user_customer_m)
+        order_list_final = []
+
+        for order_temp in order_list:
+            order_items = OrderItem.objects.filter(order = order_temp)
+            item_name =""
+            for order_item in order_items:
+
+                if item_name != '':
+                    item_name += ", "+order_item.item_name
+                else:
+                    item_name += order_item.item_name
+
+            order_parent_set = {}
+            order_parent_set['order_id'] = order_temp.order_id
+            order_parent_set['item_name'] = item_name
+            order_parent_set['created_at'] = order_temp.created_at
+            order_parent_set['updated_at'] = order_temp.updated_at
 
 
+            print(order_parent_set)
+
+            order_list_final.append(order_parent_set)
+            print(order_list_final)
+
+        return HttpResponse(json.dumps({"SUCCESS":True, "RESPONSE_MESSAGE":"DATA FETCHED", "user_order_detail": order_list_final }, indent=4, sort_keys=True, default=str),
+            content_type="application/json")
 
 
-
-#
-# def grouped(iterable, n):
-#     return izip(*[iter(iterable)]*n)
+    else:
+        errors_dict = {"DATA":"Not a valid data"}
+        return HttpResponse(json.dumps({"SUCCESS":False, "RESPONSE_MESSAGE":"INVALID DATA", "ERRORS":getErrorMessage(errors_dict)}),
+            content_type="application/json")
 
 
 def get_order_details(request):
@@ -554,10 +610,11 @@ def get_order_details(request):
         order_obj = Order.objects.get(order_id=request.POST["order_id"])
         qset_orders = Order.objects.filter(order_id=request.POST["order_id"]).values('order_id', 'status', 'user_customer', 'user_delivery_agent')
 
+
         orders_dict = queryset_to_dict(qset_orders)[0]
 
 
-        print("customer:"+str(order_obj.user_customer))
+        print(orders_dict)
 
         # get customer details
         qset_user_customer =User.objects.filter(username = order_obj.user_customer).values('username')
@@ -570,6 +627,7 @@ def get_order_details(request):
 
         customer_details['meta'] = user_customer_dict
         customer_details['profile'] = user_customer_profile_dict
+        print(user_customer_profile_dict)
 
         # get delivery agent details
 
@@ -592,23 +650,35 @@ def get_order_details(request):
         #
         # # getting order item
 
-
+        # qset_user_customer_profile = UserProfileInfo.objects.filter(user = User.objects.get(username = order_obj.user_customer)).values('location_pincode','phone_primary','location_area','location_sublocality','location_locality','location_city','location_state','location_pincode')
         order_items = OrderItem.objects.filter(order = order_obj)
-        qset_items = OrderItem.objects.filter(order = order_obj).values('item_name', 'item_quantity', 'measurement_unit')
-        user_order_item_dict = queryset_to_dict(qset_items)
+        # order_item_model = OrderItem.objects.get(order_item_id =item_order_id)
 
-        print("sizeaaa:item "+ str( user_order_item_dict))
+
+        # print(user_order_item_dict)
 
 
         item_name =""
+        user_order_item_arr=[]
+
 
         for order_item in order_items:
+
+            user_order_item_dict={}
+            user_order_item_dict['item_name'] = order_item.item_name
+            user_order_item_dict['item_quantity'] = order_item.item_quantity
+            user_order_item_dict['measurement_unit'] = order_item.measurement_unit
+            user_order_item_dict['order_item_id'] = order_item.order_item_id
+
+            user_order_item_arr.append(user_order_item_dict)
+
+
             if item_name != '':
                 item_name += ", "+order_item.item_name
             else:
                 item_name += order_item.item_name
 
-        print(item_name)
+
         order_obj.order_items = item_name
 
         # getting status text
@@ -652,7 +722,7 @@ def get_order_details(request):
             # print("==="+order_id)
 
         # return HttpResponse(json.dumps({"SUCCESS":True, "RESPONSE_MESSAGE":"DATA FETCHED", "user_customer":user_customer_s, "user_delivery_agent":user_delivery_agent_s, "order_meta":list(order_temp) }),
-        return HttpResponse(json.dumps({"SUCCESS":True, "RESPONSE_MESSAGE":"DATA FETCHED",  "order_meta":orders_dict, "order_item": user_order_item_dict, 'user_customer':customer_details, 'user_delivery_agent':delivery_agent_details }, indent=4, sort_keys=True, default=str),
+        return HttpResponse(json.dumps({"SUCCESS":True, "RESPONSE_MESSAGE":"DATA FETCHED",  "order_meta":orders_dict, "order_item": user_order_item_arr, 'user_customer':customer_details, 'user_delivery_agent':delivery_agent_details }, indent=4, sort_keys=True, default=str),
 
             content_type="application/json")
 
@@ -673,6 +743,12 @@ def get_da_details(request):
         print("came rewwww")
         # print(request.POST["username"])
         user_obj = User.objects.get(username=request.POST["username"])
+
+
+        user_profile= UserProfileInfo.objects.get( user = user_obj)
+        print(user_profile.location_state)
+
+
         user_profile = UserProfileInfo.objects.get(user=user_obj)
         da_profile = DaProfile.objects.get(user=user_profile)
         user_obj_s = serializers.serialize('json', [user_obj])
@@ -685,8 +761,6 @@ def get_da_details(request):
         errors_dict = {"DATA":"Not a valid data"}
         return HttpResponse(json.dumps({"SUCCESS":False, "RESPONSE_MESSAGE":"INVALID DATA", "ERRORS":getErrorMessage(errors_dict)}),
             content_type="application/json")
-
-
 
 # register delivery agent
 def register(request):
@@ -808,6 +882,17 @@ def register(request):
             content_type="application/json")
 
 
+def createUserName(username):
+    username_f = username
+    user_check = User.objects.filter(username=username)
+    count = 1
+
+    while user_check.count() != 0:
+        username_f = username+str(count)
+        user_check = User.objects.filter(username=username_f)
+        count = count+1
+    return username_f
+
 @login_required
 def order_create(request):
     registered = False
@@ -819,23 +904,52 @@ def order_create(request):
 
         post_data = request.POST;
 
+        profile_check = UserProfileInfo.objects.filter(phone_primary=post_data["phone_primary"], user_type = dbconstants.USER_TYPE_CONSUMER)
 
         usernamet = request.POST["username"]
         post_data["first_name"] = usernamet
-        post_data["username"] = usernamet.replace(" ", "")
+        post_data["username"] = usernamet.replace(" ", "_")
         post_data["email"] = post_data["username"]+"@idelivery.com"
         post_data["password"] = post_data["username"]+"@123"
         post_data["phone_secondary"] = "0000000000"
 
+        if profile_check.count() == 0:
+            post_data["username"] = createUserName(post_data["username"])
+            print(createUserName(post_data["username"]))
+
+        # item data validation
+        count_item_default = 1
+        proceed_order_loop = True
+        while proceed_order_loop:
+
+            item_def = 'item_name_'+str(count_item_default)
+            print(item_def)
+            if item_def in post_data:
+                item_name = post_data["item_name_"+str(count_item_default)]
+                measurement_unit = post_data["measurement_unit_"+str(count_item_default)]
+                item_quantity =  post_data["item_quantity_"+str(count_item_default)]
+
+                print(item_name+"====")
+                if item_name == "":
+
+                     proceed_order_loop = False
+                     errors_dict = {"Data":"Item Data Not Valid"}
+                     return HttpResponse(json.dumps({"SUCCESS":False, "RESPONSE_MESSAGE":"INVALID DATA", "ERRORS": errors_dict}),
+                     content_type="application/json")
+                count_item_default+=1
+
+            else :
+                proceed_order_loop = False
 
 
-        user_form = UserForm(data=post_data)
+
+        user_form = UserFormCustomer(data=post_data)
         profile_form = UserProfileInfoForm(data=request.POST)
 
-        print("came create order 2")
+
         if user_form.is_valid() and profile_form.is_valid():
             print("came create order 3")
-            profile_check = UserProfileInfo.objects.filter(phone_primary=post_data["phone_primary"], user_type = dbconstants.USER_TYPE_CONSUMER)
+
 
             proceed = True
 
@@ -873,7 +987,10 @@ def order_create(request):
 
                 if(profile.user_status == dbconstants.USER_STATUS_ACTIVE):
                     user = User.objects.get(username = profile.user)
+                    user.username = post_data["username"]
+                    user.save()
                     profile.user = user
+
                 else:
                     return HttpResponse(json.dumps({"SUCCESS":False, "RESPONSE_MESSAGE":"ERRORS", "ERRORS":"This user is disabled"}),
                     content_type="application/json")
@@ -907,11 +1024,13 @@ def order_create(request):
                 order_form = OrderForm(data=request.POST)
 
 
+
             if order_form.is_valid():
 
                 order = order_form.save(commit=False)
 
                 if is_create:
+                    # create order
                     order.user_customer = profile
                     user_del = User.objects.get(username=post_data["user_delivery_agent"])
                     da_profile = UserProfileInfo.objects.get(user=user_del)
@@ -920,8 +1039,63 @@ def order_create(request):
                     order.status_note = "Nothing to note"
                     order.slug = unique_slug_generator(order)
                     order.order_id = unique_order_id_generator(order)
-
                 order.save()
+            else :
+                return HttpResponse(json.dumps({"SUCCESS":False, "RESPONSE_MESSAGE":"ERRORS", "ERRORS": getErrorMessage(order_form.errors)}),
+                content_type="application/json")
+
+
+
+
+            # order create and update order Items
+
+
+            count_item_default = 1
+            proceed_order_loop = True
+            print ("itembl")
+            while proceed_order_loop:
+                item_def = 'item_name_'+str(count_item_default)
+                print(item_def)
+
+
+                if item_def in post_data:
+
+                    print ("came first")
+
+                    item_name = post_data["item_name_"+str(count_item_default)]
+                    measurement_unit = post_data["measurement_unit_"+str(count_item_default)]
+                    item_quantity =  post_data["item_quantity_"+str(count_item_default)]
+
+                    item_order_id =  post_data["item_pk_"+str(count_item_default)]
+
+                    order_item_model =  OrderItem()
+
+                    if item_order_id :
+
+                        order_item_model = OrderItem.objects.get(order_item_id =item_order_id)
+                        order_item_model.item_name = item_name
+                        order_item_model.item_quantity = item_quantity
+                        order_item_model.measurement_unit =   ItemMeasuementUnit.objects.get(name=measurement_unit)
+                        order_item_model.order = order
+
+                        print("camess ss")
+                    else:
+                        order_item_model.item_name = item_name
+                        order_item_model.item_quantity = item_quantity
+                        order_item_model.measurement_unit =   ItemMeasuementUnit.objects.get(name=measurement_unit)
+                        order_item_model.slug = unique_slug_generator(order_item_model)
+                        order_item_model.order_item_id = unique_order_item_id_generator(order_item_model)
+                        order_item_model.order = order
+
+
+                    order_item_model.save()
+                    count_item_default+=1
+
+                else :
+                    print("item false")
+                    proceed_order_loop = False
+
+
 
                 if is_create :
                     success_message = "Order Created successfully"
@@ -930,66 +1104,12 @@ def order_create(request):
 
 
 
-            else :
-                return HttpResponse(json.dumps({"SUCCESS":False, "RESPONSE_MESSAGE":"ERRORS", "ERRORS": getErrorMessage(order_form.errors)}),
-                content_type="application/json")
 
-
-
-            # create order ends
-
-
-
-
-            # create order item
-
-            count_item_default = 2
-
-            order_items = ". Items : "
-
-            proceed_order_loop = True
-            while proceed_order_loop:
-
-                item_def = 'item_name_'+str(count_item_default)
-                print("name_"+item_def)
-                if item_def in post_data:
-                    item_name = post_data["item_name_"+str(count_item_default)]
-                    measurement_unit = post_data["measurement_unit_"+str(count_item_default)]
-                    item_quantity =  post_data["item_quantity_"+str(count_item_default)]
-
-                    print("came for=="+str(count_item_default))
-                    order_item_model_form = OrderItemForm()
-
-
-                    print("camess ss")
-                    order_item_model =  OrderItem()
-                    order_item_model.item_name = item_name
-                    order_item_model.item_quantity = item_quantity
-                    order_item_model.measurement_unit =   ItemMeasuementUnit.objects.get(name=measurement_unit)
-
-
-                    if count_item_default > 1 :
-                        order_items +=  ", "
-                    order_items +=  item_name + " "+ item_quantity + " "+ measurement_unit
-
-                    # order_item_model_form.save(commit=False)
-                    order_item_model.slug = unique_slug_generator(order_item_model)
-                    order_item_model.order_item_id = unique_order_item_id_generator(order_item_model)
-                    order_item_model.measurement_unit = ItemMeasuementUnit.objects.get(name=measurement_unit)
-                    order_item_model.order = order
-                    count_item_default+=1
-                    order_item_model.save()
-                else :
-                    proceed_order_loop = False
-
-            # create order item ends
 
             # smsbase.sendOrderCreationMessage(customer_location = customer_location, order_number = order_model.order_id, order_items =order_items, customer_name = profile.user , customer_mobile = profile.phone_primary, da_name = user_del.username, da_mobile = da_profile.phone_primary)
 
             return HttpResponse(json.dumps({"SUCCESS":True, "RESPONSE_MESSAGE":success_message}),
             content_type="application/json")
-
-
         else:
             print(user_form.errors, profile_form.errors)
 
@@ -998,6 +1118,8 @@ def order_create(request):
 
             return HttpResponse(json.dumps({"SUCCESS":False, "RESPONSE_MESSAGE":"ERRORS", "ERRORS": getErrorMessage(errors_dict)}),
             content_type="application/json")
+
+
     else:
         errors_dict = {"Data":"Not a valid data"}
         return HttpResponse(json.dumps({"SUCCESS":False, "RESPONSE_MESSAGE":"INVALID DATA", "ERRORS": errors_dict}),

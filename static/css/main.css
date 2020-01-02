@@ -30,14 +30,14 @@ body {
     transition: all 300ms ease-out;
 }
 .success_msg_box {
-  
+
     float: left;
     width: 100%;
     color: #08a06f;
     font-size: 14px;
     text-transform: capitalize;
     transition: all 300ms ease-out;
- 
+
 }
 .common_container {
     float: left;
@@ -108,7 +108,7 @@ ul.sidebar-nav>li>a {
     padding-left: 15px;
     border-left: 2px solid transparent;
     margin-bottom: 14px;
-    
+
 }
 ul.sidebar-nav>li{
 line-height: 10px;
@@ -116,7 +116,7 @@ line-height: 10px;
 ul.sidebar-nav>li:hover{
     color: #F5764B;
     background: #fde8e1;
-    
+
 }
 ul.sidebar-nav>li>a:hover {
     color: #F5764B;
@@ -150,9 +150,10 @@ ul.sidebar-nav>li>a:hover {
     width: 100%;
 }
 .dasboard_box{padding: 15px 20px 15px;color: #fff !important;border-radius: 8px;}
-.dasboard_box .primary_title{    
+.dasboard_box .primary_title{
     font-weight: 600;
     letter-spacing: 0.8px;
+    font-size: 12px;
 }
 .bg_1{
     background: rgb(187,123,255);
@@ -216,7 +217,7 @@ span.workers_location {
 .workers_caption {
     float: left;
     margin-left: 20px;
-    
+
 }
 span.workers_name {
     font-size: 16px;
@@ -438,7 +439,7 @@ ul.product_list>li {
     height: 440px;
     overflow: scroll;
     border-bottom: 1px solid #eaeaea;
-    
+
 }
 .product_list {
     width: 100%;
@@ -952,7 +953,7 @@ input:-ms-input-placeholder {
     font-style: normal;
     font-display: block;
   }
-  
+
   .icon_set:before {
     /* use !important to prevent issues with browser extensions that change fonts */
     font-family: 'lavendel' !important;
@@ -962,12 +963,12 @@ input:-ms-input-placeholder {
     font-variant: normal;
     text-transform: none;
     line-height: 1;
-  
+
     /* Better Font Rendering =========== */
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
-  
+
   .icon-delivery-truck:before {
     content: "\e900";
   }
@@ -1076,4 +1077,7 @@ input:-ms-input-placeholder {
   .icon-remove:before {
     content: "\e926";
   }
-  
+
+  .col-half-offset{
+    margin-left:3.20000%
+}

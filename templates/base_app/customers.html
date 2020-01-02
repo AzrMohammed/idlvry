@@ -2,6 +2,8 @@
 {% block body_block %}
 
 <input type="hidden" id="ul_user_status" value="{% url 'base_app:change_user_status' %}" />
+<input type="hidden" id="url_user_order_details" value="{% url 'base_app:get_user_order_details' %}" />
+
 <div class="float-left col-md-12 no-padding">
   <div class="col-12 col-md-4 float-left pl_0">
     <h1 class="header_title float-left mt_15 w-100">Customers </h1>
@@ -28,7 +30,7 @@
             {% for user in users %}
               <tr>
 
-                <td>{{ user.user_meta.username }}</td>
+                <td onclick="getUserOrderDetails('{{user.user_meta.username }}')">{{ user.user_meta.username }}</td>
                 <td>{{ user.user_profile.phone_primary }}</td>
                 <td>{{ user.user_profile.location_area }}, {{ user.user_profile.location_sublocality }} </td>
                 <td>{{ user.user_profile.location_pincode }}</td>
@@ -87,7 +89,58 @@
   </nav>
 </div>
 <!-- <li class="page-item active"><span>{{ i }} <span class="sr-only">(current)</span></span></li> -->
-
 {% endif %}
+
+
+<div class="modal fade" id="user_order_view_alrt" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog model_register_boy" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="da_view_title">View Customer Order</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+
+          {% csrf_token %}
+
+
+          <div class="common_container pt_0" >
+
+           <table class="table" id="mytab1">
+             <thead>
+               <tr>
+                 <th>Order Id</th>
+                 <th>Order Items</th>
+                 <th>Craeted On</th>
+                 <th>Updated On</th>
+               </tr>
+             </thead>
+             <tbody id="item_table">
+
+             </tbody>
+
+          </table>
+
+
+
+          </div>
+
+
+        </div>
+
+      <div>
+      </div>
+
+      </div><!--BODY END HERE-->
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary float-left" data-dismiss="modal">Close</button>
+
+      </div>
+    </div>
+  </div>
+</div>
+<!-- da view ends  -->
 
 {% endblock %}
