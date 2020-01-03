@@ -55,12 +55,27 @@ def change_order_status(request):
     orderstatus = request.POST['order_status']
 
     order_obj = Order.objects.get(order_id=orderid)
-    updated_order_sataus=""
+    updated_order_status=""
     for key, value in dbconstants.ORDER_STATUS:
         if value == orderstatus:
-            updated_order_sataus= key
-    order_obj.status = updated_order_sataus
+            updated_order_status= key
+    order_obj.status = updated_order_status
     order_obj.save()
+
+    order_items = OrderItem.objects.filter(order = order_obj)
+
+
+    for order_item in order_items:
+        try:
+         updated_order_item_status = dbconstants.ORDER_ITEM_STATUS_CHANGE_BY_ORDER_STATUS_DIC[updated_order_status]
+         if updated_order_item_status:
+             print(order_item.status)
+             order_item.status = updated_order_item_status;
+             order_item.save()
+        except:
+             print("An exception occurred")
+
+
 
     return HttpResponse(json.dumps({"SUCCESS":True, "RESPONSE_MESSAGE":"Order status updated"}),
     content_type="application/json")
@@ -400,8 +415,9 @@ def orders_list(request):
 
     state_list  = dbconstants.STATE_LIST_DICT
     measurements_list = ItemMeasuementUnit.objects.all()
-    delivery_agents_list = UserProfileInfo.objects.prefetch_related('user').filter(user_type = dbconstants.USER_TYPE_DELIVERY_AGENT)
+    delivery_agents_list = UserProfileInfo.objects.prefetch_related('user').filter(user_type = dbconstants.USER_TYPE_DELIVERY_AGENT , user_status = dbconstants.USER_STATUS_ACTIVE)
     order_status_list = dbconstants.ORDER_STATUS_DIC
+    order_item_status = dbconstants.O_ITEM_STATUS_DIC
     # for meas in measurements_list:
     #     print("came print m"+meas.name)
     #
@@ -415,7 +431,7 @@ def orders_list(request):
         orders = paginator.page(1)
     except EmptyPage:
         orders = paginator.page(paginator.num_pages)
-    return render(request, 'base_app/orders_list.html',  { 'orders': orders, 'delivery_agents_list':delivery_agents_list, 'measurements_list':measurements_list, 'state_list':state_list , 'order_status_list':order_status_list })
+    return render(request, 'base_app/orders_list.html',  { 'orders': orders, 'delivery_agents_list':delivery_agents_list, 'measurements_list':measurements_list, 'state_list':state_list , 'order_status_list':order_status_list , 'order_item_status': order_item_status})
 
 
 
@@ -668,7 +684,9 @@ def get_order_details(request):
             user_order_item_dict['item_name'] = order_item.item_name
             user_order_item_dict['item_quantity'] = order_item.item_quantity
             user_order_item_dict['measurement_unit'] = order_item.measurement_unit
-            user_order_item_dict['order_item_id'] = order_item.order_item_id
+            user_order_item_dict['item_id'] = order_item.order_item_id
+            user_order_item_dict['item_status'] = order_item.status
+
 
             user_order_item_arr.append(user_order_item_dict)
 
@@ -1064,9 +1082,10 @@ def order_create(request):
 
                     item_name = post_data["item_name_"+str(count_item_default)]
                     measurement_unit = post_data["measurement_unit_"+str(count_item_default)]
+                    item_status = post_data["order_item_status_"+str(count_item_default)]
                     item_quantity =  post_data["item_quantity_"+str(count_item_default)]
-
                     item_order_id =  post_data["item_pk_"+str(count_item_default)]
+                    print("item_staus"+item_status)
 
                     order_item_model =  OrderItem()
 
@@ -1077,8 +1096,15 @@ def order_create(request):
                         order_item_model.item_quantity = item_quantity
                         order_item_model.measurement_unit =   ItemMeasuementUnit.objects.get(name=measurement_unit)
                         order_item_model.order = order
+                        updated_item_status=""
+                        for key, value in dbconstants.O_ITEM_STATUS:
 
-                        print("camess ss")
+                            if key == item_status:
+                                updated_item_status= key
+                            else:
+                                print("loop false")
+
+                        order_item_model.status = updated_item_status;
                     else:
                         order_item_model.item_name = item_name
                         order_item_model.item_quantity = item_quantity

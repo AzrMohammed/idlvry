@@ -1,5 +1,6 @@
 {% extends "base_app/base.html" %}
 {% block body_block %}
+{% load staticfiles %}
 
 
 <div class="float-left col-md-12 no-padding">
@@ -42,7 +43,7 @@
                 <td style="width:17%;">{{ order.order_foreign.user_customer.user_location_display }}</td>
                 <td style="width:10%;">{{ order.order_foreign.user_delivery_agent }}</td>
                 <td style="width:10%;">{{ order.order_meta.created_at }}</td>
-                <td style="width:12%;">
+                <td style="width:20%;">
                   <select class="from-control" name="order_status" id="order_status" onchange="updateOrderStatus('{{ order.order_meta.order_id }}')">
                     {% for key, value in order_status_list.items %}
                         {% if value == order.order_meta.status %}
@@ -188,7 +189,7 @@
                 <ul id="ole" class="product_list">
                   <li>
                     <div class="product_list">
-                    <div class="form-group col-md-8 pl_0 float-left">
+                    <div class="form-group col-md-4  pl_0 float-left">
                     <label for="exampleInputEmail1">1. Items name / product name (ಉತ್ಪನ್ನದ ಹೆಸರು)</label>
                     <input type="text" class="form-control" id="item_name" name="item_name_1" placeholder="Write down the requirment">
 
@@ -204,6 +205,19 @@
                     <option value="{{measurements.name}}"> {{measurements.name}} </option>
                     {% endfor %}
                     </select>
+                    </div>
+                    <div class="from-group col-md-4 pl_0 float-left">
+                      <label for="">Status</label>
+                      <select class="form-control" id="order_item_status" name="order_item_status_1">
+                        {% for key, value in order_item_status.items %}
+                            {% if key == order.order_meta.status %}
+                                 <option value="{{key}}" selected='selected'>{{value}}</option>
+                            {% else %}
+                                 <option value="{{key}}">{{value}}</option>
+                            {% endif %}
+                        {% endfor %}
+                      </select>
+                    </div>
                     </div>
                     <input type="hidden" class="form-control" name="item_pk_1" id="item_pk"  placeholder="Order Item Id" >
 
@@ -308,6 +322,9 @@
                   <label for="">UNIT</label>
                   <span class="font_14 float-left" id="measurement_unit_v" > </span>
                   </div>
+
+
+
                 </li>
               </ul>
             </div>

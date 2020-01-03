@@ -504,7 +504,7 @@ function getOrderDetails(orderid)
             if(data.SUCCESS)
              {
 
-               // alert(JSON.stringify(data))
+               alert(JSON.stringify(data))
                final_data = JSON.parse(JSON.stringify(data))
                console.log(final_data);
                response_message = final_data.RESPONSE_MESSAGE
@@ -567,25 +567,42 @@ function getOrderDetails(orderid)
 
                $("#item_name"+id_suffix).val(data_order_items[i]["item_name"])
                $("#item_quantity"+id_suffix).val(data_order_items[i]["item_quantity"])
-               $('#item_pk'+id_suffix).val(data_order_items[i]["order_item_id"])
+               $('#item_pk'+id_suffix).val(data_order_items[i]["item_id"])
 
                var measurement_unit = data_order_items[i]['measurement_unit'];
+               var order_status = data_order_items[i]['item_status'];
+
+
                var measurement_unit_val = "";
-               console.log("unit "+measurement_unit);
 
                  var mapped_state = $('#measurement_unit option').map(function() {
                  var obj_state = {};
                  obj_state[this.value] = this.textContent;
-                 // alert("came opt"+this.value)
                  if(measurement_unit == this.value)
                    {
-                     // alert("came opts=="+this.value)
                      measurement_unit_val = this.value;
                    }
                  return obj_state;
                });
-               console.log("measurement_unit_val "+measurement_unit_val);
-               $("#measurement_unit"+id_suffix).val(measurement_unit_val)
+
+               $("#measurement_unit"+id_suffix).val(measurement_unit_val);
+
+
+               var item_status_val = "";
+
+                 var mapped_state = $('#order_item_status option').map(function() {
+                 var obj_state = {};
+                 obj_state[this.value] = this.textContent;
+                 if(order_status == this.value)
+                   {
+                     item_status_val = this.value;
+                   }
+                 return obj_state;
+               });
+
+               $("#order_item_status"+id_suffix).val(item_status_val);
+
+
 
 
 
@@ -801,7 +818,7 @@ function getDaDetails()
 }
 
 
-function updateOrderStatus(orderid){
+  function updateOrderStatus(orderid){
   var selected_order_status = $('#order_status').find(":selected").text();
   console.log(selected_order_status);
 
@@ -839,7 +856,7 @@ function getUserOrderDetails(username){
 
            if(data.SUCCESS){
 
-                alert(JSON.stringify(data));
+                // alert(JSON.stringify(data));
 
                 final_data = JSON.parse(JSON.stringify(data))
                 response_message = final_data.RESPONSE_MESSAGE
@@ -903,7 +920,7 @@ function getOrderItemComponent()
   var current_index = count_order_items+1;
 
   var html_content = '<li>';
-  html_content += '<div class="form-group col-md-8 pl_0 float-left">';
+  html_content += '<div class="form-group col-md-4   pl_0 float-left">';
   html_content += '<label for="exampleInputEmail1">'+current_index+'. Items name / product name (ಉತ್ಪನ್ನದ ಹೆಸರು)</label>';
   html_content += '<input type="text" class="form-control" id="item_name_'+current_index+'" name="item_name_'+current_index+'" placeholder="Write down the requirment">';
   html_content += '</div>';
@@ -916,6 +933,13 @@ function getOrderItemComponent()
   html_content += '<select class="form-control" id="measurement_unit_'+current_index+'" name="measurement_unit_'+current_index+'">';
   var cont = document.getElementById("measurement_unit").innerHTML;
   html_content += cont;
+  html_content += '</select>';
+  html_content += '</div>';
+  html_content+='<div class="form-group col-md-4 pl_0 float-left">';
+  html_content+='<label for="">STATUS</label>';
+  html_content+='<select class="form-control" id="order_item_status_'+current_index+'" name="order_item_status_'+current_index+'">';
+  var cont_item = document.getElementById("order_item_status").innerHTML;
+  html_content += cont_item;
   html_content += '</select>';
   html_content += '</div>';
   html_content+= '<input type="hidden" class="form-control" name="item_pk_'+current_index+'" id="item_pk_'+current_index+'"  placeholder="Order Item Id" >';

@@ -11,6 +11,10 @@
     --grey: #7B7B7B !important;
     ;
 }
+
+#clear_item{
+  background: blue;
+}
 @import url('https://fonts.googleapis.com/css?family=Montserrat:500,700&display=swap');
 body {
     font-size: 14px;
@@ -300,6 +304,9 @@ span.pro_list_text, .pro_list_text, a.pro_list_text   {
     padding: 12px 0 10px;
     float: left;
     color: #fff;
+}
+#clear_item{
+  background-color: red;
 }
 .right_login{
     float: left;
