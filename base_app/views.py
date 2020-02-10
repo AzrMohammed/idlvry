@@ -25,6 +25,7 @@ import re
 # from itertools import izip
 
 
+
 def change_user_status(request):
 
     print("came changestat")
@@ -265,6 +266,16 @@ def delivery_agents(request):
         users = paginator.page(paginator.num_pages)
     return render(request, 'base_app/delivery_agents.html',  {'state_list':dbconstants.STATE_LIST_DICT, 'users': users, 'pic_server_prefix':'http://167.71.126.94:8000/media/' })
 
+def invoices(request):
+    return render(request, 'base_app/invoices.html',  { })
+
+
+def invoices_new(request):
+    return render(request, 'base_app/invoices_new.html',  { })    
+
+
+def invoices_item(request):
+    return render(request, 'base_app/invoices_item.html',  { })
 
 @login_required
 def customer_care_executive(request):

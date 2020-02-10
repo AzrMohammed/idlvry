@@ -1,0 +1,161 @@
+{% extends "base_app/base.html" %} {% block body_block %}
+<input type="hidden" id="ul_user_status" value="{% url 'base_app:change_user_status' %}" />
+<div class="float-left col-md-12 no-padding">
+
+<div class="col-md-8 col-12 float-left no-padding">
+<div class="common_container">
+
+    <div class="content_wrapper">
+        
+        <div class="form-group col-12 col-md-5 pl_0 float-left">
+            <label for="">Customer</label>
+            <li class="nav-item dropdown select_dropdown">
+                <a class="select_dropdown_a form-control nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Select Customer
+                </a>
+                <div class="dropdown-menu dropdown_menu" aria-labelledby="navbarDropdown">
+                    <span class="p_10 w-100 float-left pb_0"><input type="text" class="form-control" id="item_name" name="" placeholder="Search by Id"></span>                    
+                    <a class="dropdown-item" href="#">Robin Padhi (9853545441)</a>
+                    <a class="dropdown-item" href="#">Jhon K Millers (9853545441)</a>
+                    <div class="dropdown-divider"></div>
+                    <a class="dropdown-item" href="">+ New Customer</a> 
+
+                </div>
+            </li>
+        </div>
+        <div class="form-group col-12 col-md-2 pl_0 float-left">
+            <label for="">Invoice #</label>
+            <input type="text" class="form-control" id="item_name" name="" placeholder="Enter inoive no.">       
+        </div>
+        <div class="w-100 float-left mt_15 mb_15" style="background: #f5f5f5; padding: 10px 15px 0;">
+            <div class="form-group col-12 col-md-3 pl_0 float-left">
+                <label for="">Invoice Date</label>
+                <input type="text" class="form-control" id="item_name" name="" placeholder="inoive Date"> 
+            </div>
+            <div class="form-group col-12 col-md-3 pl_0 float-left">
+                <label for="">Due Date</label>
+                <input type="text" class="form-control" id="item_name" name="" placeholder="Due Date">
+            </div>
+            <div class="form-group col-12 col-md-3 pl_0 float-left">
+                <label for="exampleInputEmail1">PLACE OF SUPPLY</label>
+                <select class="form-control" id="" name="">
+                    <option value="Maharastra">Select here</option>
+                    <option value="Maharastra">Maharastra</option>
+                    <option value="Maharastra">Kerela</option>
+                </select>
+            </div>
+        </div>
+        <div class="form-group col-12 col-md-6 pl_0 float-left">
+            <label for="">Billing ADDRESS </label>
+            <span class="customer_address">
+                <button type="button" class="add_more pl_0">+ Add Billing Address</button>
+            </span>
+        </div>
+        <div class="form-group col-12 col-md-6 pl_0 float-left">
+            <label for="">SHIPPING ADDRESS  <a href="" class="text_link pl_15"> Change</a> | <a href="" class="text_link">Remove</a> </label>
+            <span class="customer_address">
+                A 305, Akul Residensy, Gunjur-Doddakannelli Rd, Kachamaranahalli, Bengaluru, Karnataka 560087
+            </span>
+        </div>
+
+        
+
+
+        <div class="mt_20 float-left w-100">
+            <table class="table invoice_table">
+                <thead>
+                    <tr>
+                    <th style="width: 55%">Description</th>
+                    <th style="width: 15%">Quantity</th>
+                    <th style="width: 15%">Rate</th>
+                    <th style="width: 15%">Total Date </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>      
+                        <td>  
+                        <span class="product_dropdown">
+                            <span class="product_select">Select Product</span>
+                            
+                        </span>
+                        </td>
+                        <td style=""> <a href="{% url 'base_app:invoices_new' %}" class="items_link"> ASD23232</a>  </td>
+                        <td style="">  ₹ 3,234.0 </td>
+                        <td style="">  12/05/2020 </td>
+                    </tr>
+                    <tr>        
+                        <td style="">  12/12/2020 </td>
+                        <td style="">  <a href="#" class="items_link">ASZ2323</a> </td>
+                        <td style="">  ₹ 3,234.0 </td>
+                        <td style="">  12/05/2020 </td>
+                    </tr>
+                </tbody>
+                </table>
+        </div>
+        <div class="col-md-7 float-right col-12 mt_20">
+            <table class="invoice_summary float-right">
+                <tr>
+                    <td>Sub Total</td>
+                    <td>₹ 3,234.0</td>
+                </tr>
+                <tr>
+                    <td>Discount</td>
+                    <td>₹ 00.0</td>
+                </tr>
+                <tr>
+                    <td>CGST @ 9.0%</td>
+                    <td>₹ 340.0</td>
+                </tr>
+                <tr>
+                    <td>SGST @ 9.2%</td>
+                    <td>₹ 440.0</td>
+                </tr>
+                <tr>
+                    <td> <span class="font_20">Total Amount</span> </td>
+                    <td><span class="font_20">₹ 3,234.0</span></td>
+                </tr>
+            </table>
+        </div>
+            
+            <div class="product_dropdown_show">
+                    <ul class="product_for_invoices">
+                        <li>
+                            Apple watch Rs. 34,00 Stock:23
+                        </li>
+                        <li>
+                            Apple watch Rs. 34,00 Stock:23
+                        </li>
+                    </ul>
+                </div>
+
+
+    </div><!-- ==== == End of Content Wrapper Container ======================-->
+     
+
+</div> <!--End of Common Container-->
+</div>
+<div class="col-md-3 float-right col-12">
+    <div class="common_container">
+        <div class="content_wrapper">
+            <button type="button" id="btn_submit" class="btn primary_btn float-right w-100 mt_10">Save & Send Invoices</button>
+            <button type="button" class="btn btn-secondary float-left w-100 mt_15" data-dismiss="modal">Save as Draft</button>
+        </div>
+    </div>
+    <div class="w-100 float-left mt_30">
+        GST & Billings
+        <div class="common_container p_15">
+            <div class="form-group">
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" value="" id="invalidCheck" required>
+                    <label class="form-check-label" for="invalidCheck"> Enable GST </label>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+</div>
+
+
+{% endblock %}

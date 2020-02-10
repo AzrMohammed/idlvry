@@ -11,7 +11,7 @@
     <input type="hidden" id="url_order_status" value="{% url 'base_app:change_order_status' %}" />
   <div class="col-md-8 col-12 float-right pr_0 mb_15">
     <input type="email" id="search_input" class="form-control float-left col-md-8 mt_15" placeholder="Search here..">
-    <button type="button"  onclick="openDaOrderForm()" class="mt_15 btn primary_btn float-right">Create an Order</button>
+    <button type="button"  onclick="openDaOrderForm()" class="mt_15 btn primary_btn float-right">Create Order</button>
 
     <!-- <button type="hidden" onclick="getOrderDetails()" class="mt_15 btn primary_btn float-left">Get Details</button> -->
     <!-- getOrderDetails -->
@@ -37,12 +37,12 @@
               <tr>
 
                 <td style="width:5%;">{{ order.order_meta.order_id }}</td>
-                <td style="width:8%;">{{ order.order_foreign.user_customer.user }}</td>
+                <td style="width:10%;">{{ order.order_foreign.user_customer.user }}</td>
                 <td style="width:25%;">{{ order.order_meta.order_items }}</td>
-                <td style="width:17%;">{{ order.order_foreign.user_customer.user_location_display }}</td>
+                <td style="width:15%;">{{ order.order_foreign.user_customer.user_location_display }}</td>
                 <td style="width:10%;">{{ order.order_foreign.user_delivery_agent }}</td>
                 <td style="width:10%;">{{ order.order_meta.created_at }}</td>
-                <td style="width:12%;">
+                <td style="width:10%;">
                   <select class="from-control" name="order_status" id="order_status" onchange="updateOrderStatus('{{ order.order_meta.order_id }}')">
                     {% for key, value in order_status_list.items %}
                         {% if value == order.order_meta.status %}
@@ -53,10 +53,10 @@
                     {% endfor %}
                   </select>
                 </td>
-                <td style="width:13%;">
+                <td style="width:25%;">
                   <input type="hidden" value="{{ order.order_meta.slug }}" />
-                  <button  onclick="getOrderDetails('{{ order.order_meta.order_id }}')" type="button" name="button" class="float-left"> Edit</button>
-                  <button  onclick="viewEachOrderDetail('{{ order.order_meta.order_id }}')" type="button" name="button" class="float-left"> View</button> </td>
+                  <button  onclick="getOrderDetails('{{ order.order_meta.order_id }}')" type="button" name="button" class="float-left edit_btn"> Edit</button>
+                  <button  onclick="viewEachOrderDetail('{{ order.order_meta.order_id }}')" type="button" name="button" class="float-left view_btn"> View</button> </td>
               </tr>
             {% endfor %}
           </tbody>

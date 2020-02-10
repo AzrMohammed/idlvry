@@ -953,3 +953,25 @@ function viewOrderItemComponent()
   $("#ole_view").append(html_content);
 
 }
+
+
+$(function(){
+  var current = location.pathname;
+  $('.sidebar-nav li a').each(function(){
+      var $this = $(this);
+      // if the current path is like this link, make it active
+      // if($this.attr('href').indexOf(current) !== -1){
+      if ($this.attr('href') === current) {
+          $this.addClass('nav_active');
+      }
+  })
+})
+
+// jQuery(function($) {
+//   var path = window.location.href; // because the 'href' property of the DOM element is the absolute path
+//   $('sidebar-nav li a').each(function() {
+//    if (this.href === path) {
+//     $(this).addClass('nav_active');
+//    }
+//   });
+//  });
