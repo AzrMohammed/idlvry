@@ -1,22 +1,39 @@
 {% extends "base_app/base.html" %}
 {% block body_block %}
 
-
-<div class="float-left col-md-12 no-padding">
-    <div class="col-12 col-md-4 float-left pl_0">
-    <h1 class="header_title float-left mt_15 w-100">Orders </h1>
-    <span class="font_14 float-left grey_color">Showing 120 order received</span>
-  </div>
     <input type="hidden" id="order_fetch" value="{% url 'base_app:get_order_details' %}" />
     <input type="hidden" id="url_order_status" value="{% url 'base_app:change_order_status' %}" />
-  <div class="col-md-8 col-12 float-right pr_0 mb_15">
-    <input type="email" id="search_input" class="form-control float-left col-md-8 mt_15" placeholder="Search here..">
-    <button type="button"  onclick="openDaOrderForm()" class="mt_15 btn primary_btn float-right">Create Order</button>
 
-    <!-- <button type="hidden" onclick="getOrderDetails()" class="mt_15 btn primary_btn float-left">Get Details</button> -->
-    <!-- getOrderDetails -->
-  </div>
-
+  <div class="filter_container">  <!-- ==== Filter Container ======================-->
+    <div class="form-group col-md-2 pl_0 float-left">
+      <label for="">By Status</label>
+      <select class="form-control" name="">
+          <option value=""> Placed </option>
+          <option value=""> Deliverd </option>
+      </select>
+    </div>
+    <div class="form-group col-md-2 pl_0 float-left">
+      <label for="">By Customer Name</label>
+      <input type="text" class="form-control" id="item_name" name="" placeholder="Search by Customer">
+    </div>
+    <div class="form-group col-md-2 pl_0 float-left">
+      <label for="">Order Id</label>
+      <input type="text" class="form-control" id="item_name" name="" placeholder="Order Number">
+    </div>
+    <div class="form-group col-md-2 pl_0 float-left">
+      <label for="">Invoice Id</label>
+      <input type="text" class="form-control" id="item_name" name="" placeholder="Search by Id">
+    </div>
+    <div class="form-group col-md-1 pl_0 pr_0 float-left mt_5"> <label for=""></label><button type="button" class="btn btn-secondary float-left">Search</button> </div>
+    <div class="form-group col-md-2 pl_0 float-left">
+      
+      <a href class="icon_set icon_download"> Export Report</a>  
+    </div>
+    <div class="form-group col-md-1 pl_0 float-right">
+      <button type="button"  onclick="openDaOrderForm()" class="mt_30 btn primary_btn float-right">Create Order</button>
+    </div>
+    
+</div> <!-- ==== End of Filter Container ======================-->
 <div class="common_container pt_0">
   <div class="table-responsive">
       <table class="table">
@@ -67,25 +84,7 @@
 
 
 {% if orders.has_other_pages %}
-  <!-- <ul class="pagination">
-    {% if orders.has_previous %}
-      <li><a href="?page={{ users.previous_page_number }}">&laquo;</a></li>
-    {% else %}
-      <li class="disabled"><span>&laquo;</span></li>
-    {% endif %}
-    {% for i in orders.paginator.page_range %}
-      {% if order.number == i %}
-        <li class="active"><span>{{ i }} <span class="sr-only">(current)</span></span></li>
-      {% else %}
-        <li><a href="?page={{ i }}">{{ i }}</a></li>
-      {% endif %}
-    {% endfor %}
-    {% if orders.has_next %}
-      <li><a href="?page={{ users.next_page_number }}">&raquo;</a></li>
-    {% else %}
-      <li class="disabled"><span>&raquo;</span></li>
-    {% endif %}
-  </ul> -->
+
   <nav aria-label="Page navigation example">
       <ul class="pagination">
         {% if orders.has_previous %}
@@ -113,7 +112,6 @@
 {% endif %}
 
 <!-- order create alert -->
-
 <div class="modal fade" id="create_order_form_parent" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog model_create_order" role="document">
       <div class="modal-content">
@@ -217,18 +215,60 @@
 
 
           </form>
-        </div>
-        <!--BODY END HERE-->
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary float-left" data-dismiss="modal">Close</button>
-          <button type="button" id="btn_submit" onclick="createOrder()" class="btn primary_btn float-right">Place Order</button>
-          <!-- <button type="button" onclick="createOrder()" class="btn primary_btn float-right">Place Order</button> -->
-        </div>
+      </div>
+      <!--BODY END HERE-->
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary float-left" data-dismiss="modal">Close</button>
+        <button type="button" id="btn_submit" onclick="createOrder()" class="btn primary_btn float-right">Place Order</button>
+        <!-- <button type="button" onclick="createOrder()" class="btn primary_btn float-right">Place Order</button> -->
       </div>
     </div>
   </div>
+</div>
+
+<!-- <div id="printableArea">
+    <h1>Print me</h1>
+</div> -->
 
 
+<script>
+// function printDiv(printableArea) {
+//      var printContents = document.getElementById(printableArea).innerHTML;
+//      var originalContents = document.body.innerHTML;
+
+//      document.body.innerHTML = printContents;
+
+//      window.print();
+
+//      document.body.innerHTML = originalContents;
+
+//      document.close();
+// }
+function printDiv() { 
+            var divContents = document.getElementById("printableArea").innerHTML; 
+            var a = window.open('', '', 'height=700, width=800'); 
+            a.document.write('<html>'); 
+            a.document.write('<body > <h1>Div contents are <br>'); 
+            a.document.write(divContents); 
+            a.document.write('</body></html>'); 
+            a.document.close(); 
+            a.print(); 
+            a.document.window.close(); 
+        } 
+
+</script>
+<style>
+@media print {
+  
+  #printable { display: none; }
+
+@media print
+{
+    #non-printable { display: none; }
+    #printable { display: block; }
+}
+}
+</style>
 <!-- order view alert -->
 
   <div class="modal fade" id="order_view_alrt" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -239,12 +279,10 @@
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
-      </div>
-      <div class="modal-body">
+      </div> 
+      <div class="modal-body" id="printableArea">
 
           {% csrf_token %}
-
-
           <div class="col-md-5 float-left no-padding col-12">
               <h1 class="primary_title float-left mb_10 w-100">Primary Information</h1>
               <input type="hidden" class="form-control" name="pk" id="pk"  placeholder="User Name" >
@@ -314,17 +352,12 @@
           </div>
 
         </div>
-
-      <div>
-      </div>
-
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary float-left" data-dismiss="modal">Close</button>
+        </div>
       </div><!--BODY END HERE-->
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary float-left" data-dismiss="modal">Close</button>
-
-      </div>
-    </div>
-  </div>
+      
+  </div></div>
 </div>
 <!-- da view ends  -->
 

@@ -17,25 +17,23 @@
 {% block body_block %}
 <div class="login_contianer">
   <input type="hidden" id="login_success" value="{% url 'base_app:index' %}" />
-  <div class="col-lg-2 col-md-2 float-left"></div>
-  <div class="col-12 col-lg-8 col-md-8 float-left">
     <div class="login_box">
       <div class="col-md-7 float-left no-padding col-6">
         <div class="left_login">
-            <ul class="pro_list">
-              <li><img src="/static/images/basket.svg" alt=""><span class="pro_list_text">Home Need</span></li>
-              <li><img src="/static/images/stationery.svg" alt=""><span class="pro_list_text">Stationery</span></li>
-              <li><img src="/static/images/basket.svg" alt=""><span class="pro_list_text">Personal Product</span></li>
-              <li><img src="/static/images/basket.svg" alt=""><span class="pro_list_text">Food</span></li>
-              <li><img src="/static/images/basket.svg" alt=""><span class="pro_list_text">Medicine</span></li>
-              <li><img src="/static/images/basket.svg" alt=""><span class="pro_list_text">Pet Product</span></li>
-            </ul>
+            <img src="/static/images/img_12.png" class="mt_20" style="">
+          <span class="font_14 mt_30 float-left">Manage sales and purchase orders, create packages and shipments, and send delivery updates through a single order management system. Dedicate more time to growing your orders than managing them.</span>
+          <span class="font_18 w-100 pt_30 float-left" style="font-weight:700;">Manage</span>
+          <span class="w-100 float-left" style="">Manage your order with our Powerful Order management Tool.</span>
+          <span class="font_18 w-100 pt_30 float-left" style="font-weight:700;">Manage</span>
+          <span class="w-100 float-left" style="">You can track your order with individuals step
+              Based on stages</span>
+          
 
         </div>
       </div>
       <div class="col-md-5 float-left no-padding col-6">
         <div class="right_login">
-            <img src="/static/images/logo.svg" alt="">
+          <img src="/static/images/logo.svg" class="" style="max-width: 120px;">
           <span class="font_14 second_color w-100 float-left mt_30">WELCOME BACK</span>
           <h1 class="header_title float-left mb_20 w-100">Login to your account</h1>
           <form id="login_form" action="{% url 'base_app:login' %}" method="POST">
@@ -50,16 +48,17 @@
               <label for="exampleInputEmail1">Password</label>
               <input type="password" name="password" id="password" class="form-control" placeholder="Password">
             </div>
-            <h1 id="error_el" class="header_title float-left mb_20 w-100"> </h1>
-            <a onclick="proceedUserLogin()" name="" value="Login" class="btn primary_btn mt_10">login</a>
+        
+            
+              
+            <a onclick="proceedUserLogin()" name="" value="Login" class="btn primary_btn w-100" style="color: #fff !important;">login</a>
+            <span id="error_el" class="error_msg_box error_msg_box_bg mt_10"></span>
 
           </form>
         </div>
       </div> <!--Left END-->
     </div>
 
-    </div>
-  <div class="col-lg-2 col-md-2 float-left"></div>
 </div>
 <script src="{% static "js/delivery_agents.js" %}" > </script>
 
