@@ -1,43 +1,65 @@
 {% extends "base_app/base.html" %}
 {% block body_block %}
 {% load staticfiles %}
+{% load widget_tweaks %}
+
+
+<link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+
+
+<script>
+$(function() {
+// $("#datepickerS").datepicker();
+$('#datepicker').datepicker({ dateFormat: 'dd/mm/yy' }).val();
+});
+</script>
 
     <input type="hidden" id="order_fetch" value="{% url 'base_app:get_order_details' %}" />
     <input type="hidden" id="url_order_status" value="{% url 'base_app:change_order_status' %}" />
 
-  <div class="filter_container">  <!-- ==== Filter Container ======================-->
-    <div class="form-group col-md-2 pl_0 float-left">
-      <label for="">By Status</label>
-      <select class="form-control" name="">
-          <option value=""> Placed </option>
-          <option value=""> Deliverd </option>
-      </select>
-    </div>
-    <div class="form-group col-md-2 pl_0 float-left">
-      <label for="">By Customer Name</label>
-      <input type="text" class="form-control" id="item_name" name="" placeholder="Search by Customer">
-    </div>
-    <div class="form-group col-md-2 pl_0 float-left">
-      <label for="">Order Id</label>
-      <input type="text" class="form-control" id="item_name" name="" placeholder="Order Number">
-    </div>
-    <div class="form-group col-md-2 pl_0 float-left">
-      <label for="">Invoice Id</label>
-      <input type="text" class="form-control" id="item_name" name="" placeholder="Search by Id">
-    </div>
-    <div class="form-group col-md-1 pl_0 pr_0 float-left mt_5"> <label for=""></label><button type="button" class="btn btn-secondary float-left">Search</button> </div>
-    <div class="form-group col-md-2 pl_0 float-left">
 
-      <a href class="icon_set icon_download"> Export Report</a>
-    </div>
-    <div class="form-group col-md-1 pl_0 float-right">
-      <button type="button"  onclick="openDaOrderForm()" class="mt_30 btn primary_btn float-right">Create Order</button>
+    <div class="filter_container">
+
+    <div class="card card-body">
+      <form method="get">
+
+        {% csrf_token %}
+        <div class="form-group float-left col-md-2 pl_0">
+        {{ myFilter.form.order_id.label_tag }}
+        {% render_field myFilter.form.order_id class="form-control" placeholder=myFilter.form.order_id.label %}
+        </div>
+        <div class="form-group float-left col-md-2 pl_0">
+        {{ myFilter.form.status.label_tag }}
+        {% render_field myFilter.form.status class="form-control" placeholder=myFilter.form.status.label %}
+        </div>
+        <div class="col-12 col-md-3 pl_0 float-left">
+        <label for="">Invoice Date</label>
+        <!-- <input type="text" id="datepicker" name="start_date" class="form-control" placeholder="Select Date"> -->
+        {% render_field myFilter.form.start_date class="form-control" id="datepicker" placeholder=myFilter.form.start_date.label %}
+
+        </div>
+        <div class="form-group float-left col-md-2 pl_0">
+        <label for="exampleInputEmail1"></label>
+        <button class="btn btn-primary" type="submit">Search</button>
+        <a href="{% url 'base_app:orders_list' %}">Reset</a>
+        </div>
+        <div class="form-group col-md-1 pl_0 float-right">
+          <button type="button"  onclick="openDaOrderForm()" class="mt_30 btn primary_btn float-right">Create Order</button>
+        </div>
+      </form>
+
     </div>
 
-</div> <!-- ==== End of Filter Container ======================-->
+
+
+
+
+
 <div class="common_container pt_0">
   <div class="table-responsive">
-      <table class="table">
+
+    <table class="table">
           <thead>
             <tr>
               <th>ID</th>
@@ -60,9 +82,9 @@
                 <td style="width:15%;">{{ order.order_foreign.user_customer.user_location_display }}</td>
                 <td style="width:10%;">{{ order.order_foreign.user_delivery_agent }}</td>
                 <td style="width:10%;">{{ order.order_meta.created_at }}</td>
-=
+
                 <td onclick="changeOrderStatus('{{order.order_meta.status}}','{{order.order_meta.order_id}}')" style="width:20%;">{{ order.order_meta.status }} </td>
-                <td style="width:13%;">
+                <!-- <td style="width:13%;">
 
                 <td style="width:10%;">
                   <select class="from-control" name="order_status" id="order_status" onchange="updateOrderStatus('{{ order.order_meta.order_id }}')">
@@ -74,7 +96,7 @@
                         {% endif %}
                     {% endfor %}
                   </select>
-                </td>
+                </td> -->
                 <td style="width:25%;">
 
                   <input type="hidden" value="{{ order.order_meta.slug }}" />
@@ -99,11 +121,22 @@
         <li class="page-item disabled"><a class="page-link" href="#">Previous</a></li>
         {% endif %}
         {% for i in orders.paginator.page_range %}
-          {% if orders.number == i %}
-        <li class="page-item active"><a class="page-link" href="#"><span>{{ i }}</span></a> </li>
-        {% else %}
-        <li class="page-item"><a class="page-link" href="?page={{ i }}">{{ i }}</a></li>
-        {% endif %}
+
+
+          {% if orders.number|add:"2"  >= i %}
+          {% if orders.number|add:"-2"  <= i %}
+
+            {% if orders.number == i %}
+            <li class="page-item active"><a class="page-link" href="#"><span>{{ i }}</span></a> </li>
+            {% else %}
+            <li class="page-item"><a class="page-link" href="?page={{ i }}">{{ i }}</a></li>
+            {% endif %}
+
+          {% endif %}
+          {% endif %}
+
+
+
         {% endfor %}
         {% if orders.has_next %}
         <li class="page-item"><a class="page-link" href="?page={{ users.next_page_number }}">Next </a></li>
@@ -431,5 +464,19 @@ function printDiv() {
   </div>
 </div>
 <!-- da view ends  -->
+
+
+<!-- sucess_message -->
+<div class="modal fade" id="success_alrt"  role="dialog" aria-hidden="true">
+<div class="success_box" style="display: block;">
+  <span class="succ_text">Thank you</span>
+</div>
+</div>
+
+<!-- error messgae -->
+<div class="modal fade" id="error_alrt"  role="dialog"  aria-hidden="true">
+<div class="error_box" style="display:block ;">
+  <span class="error_text">Error Box </span>
+</div>
 
 {% endblock %}

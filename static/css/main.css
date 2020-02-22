@@ -351,15 +351,8 @@ a.pro_list_text {
     float: left;
     color: #fff;
 }
-<<<<<<< HEAD
-#clear_item{
-  background-color: red;
-}
-.right_login{
-=======
 
 .right_login {
->>>>>>> b130bee493da7b8df9b36a0872e59ce5c775d344
     float: left;
     width: 100%;
     padding: 30px 30px 20px;
@@ -877,7 +870,7 @@ ul.page_breadcurm li>a {
 .font_22 {
     font-size: 22px !important;
     line-height: normal;
-
+}
 
 .font_24 {
     font-size: 24px !important;
@@ -1467,4 +1460,30 @@ input:-ms-input-placeholder {
 }
 .icon_download:before {
     content: "\e929";
+  }
+
+  .success_box {
+      position: fixed;
+      width: auto;
+      background: #29b210;
+      z-index: 1111;
+      top: 0;
+      left: 40%;
+      padding: 10px 30px 10px;
+      border-radius: 4px;
+      color: #fff;
+      text-align: center;
+  }
+  
+  .error_box{
+      position: fixed;
+      width: auto;
+      background: #dc3545;
+      z-index: 1111;
+      top: 0;
+      left: 40%;
+      padding: 10px 30px 10px;
+      border-radius: 4px;
+      color: #fff;
+      text-align: center;
   }

@@ -22,6 +22,7 @@ from django.http import JsonResponse
 import json
 from base_app import smsbase
 import re
+from .filters import OrderFilter
 # from itertools import izip
 
 
@@ -286,7 +287,7 @@ def invoices(request):
 
 
 def invoices_new(request):
-    return render(request, 'base_app/invoices_new.html',  { })    
+    return render(request, 'base_app/invoices_new.html',  { })
 
 
 def invoices_item(request):
@@ -364,6 +365,9 @@ def orders_list(request):
 
     order_list_final = []
 
+    myFilter = OrderFilter(request.GET, queryset=order_list)
+    order_list = myFilter.qs
+
     for order_temp in order_list:
         # print("caddd")
         # print("cadddw"+str(order_temp.user_customer))
@@ -435,14 +439,14 @@ def orders_list(request):
 
     page = request.GET.get('page', 1)
 
-    paginator = Paginator(order_list_final, 9)
+    paginator = Paginator(order_list_final, 1)
     try:
         orders = paginator.page(page)
     except PageNotAnInteger:
         orders = paginator.page(1)
     except EmptyPage:
         orders = paginator.page(paginator.num_pages)
-    return render(request, 'base_app/orders_list.html',  { 'orders': orders, 'delivery_agents_list':delivery_agents_list, 'measurements_list':measurements_list, 'state_list':state_list , 'order_status_list':order_status_list , 'order_item_status': order_item_status})
+    return render(request, 'base_app/orders_list.html',  { 'orders': orders, 'delivery_agents_list':delivery_agents_list, 'measurements_list':measurements_list, 'state_list':state_list , 'order_status_list':order_status_list , 'order_item_status': order_item_status, 'myFilter':myFilter})
 
 
 

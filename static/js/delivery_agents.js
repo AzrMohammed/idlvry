@@ -993,58 +993,68 @@ function viewOrderItemComponent()
 function changeOrderStatus(order_status, order_id){
 
 
-  $('#order_id').val(order_id);
 
-  $('#status_alrt').modal('toggle');
+  if ( order_status == 'ORDER_CANCELLED' || order_status == 'ORDER_DELIVERED' ){
 
-  $("#order_placed").hide();
-  $("#order_conform").hide();
-  $("#order_picked").hide();
-  $("#order_delivered").hide();
-  $("#order_cancelled").hide();
-  $("#status_empty").hide();
+    $('#error_alrt').model(toggle);
+
+  }else {
 
 
-  switch(order_status) {
+      $('#order_id').val(order_id);
 
-  case 'ORDER_PLACED':
-        $('#order_placed_r').prop('checked', true);
-        $("#order_placed").show();
-        $("#order_conform").show();
-        $("#order_picked").show();
-        $("#order_delivered").show();
-        $("#order_cancelled").show();
-    break;
+      $('#status_alrt').modal('toggle');
 
-  case 'ORDER_CONFIRMED_BY_CUSTOMER':
-        $('#order_conform_r').prop('checked', true);
-        $("#order_conform").show();
-        $("#order_picked").show();
-        $("#order_delivered").show();
-        $("#order_cancelled").show();
-    break;
+      $("#order_placed").hide();
+      $("#order_conform").hide();
+      $("#order_picked").hide();
+      $("#order_delivered").hide();
+      $("#order_cancelled").hide();
+      $("#status_empty").hide();
 
-  case 'ORDER_PICKEDUP':
-        $('#order_picked_r').prop('checked', true);
-        $("#order_picked").show();
-        $("#order_delivered").show();
-        $("#order_cancelled").show();
-    break;
 
-  case 'ORDER_DELIVERED':
-        $('#order_delivered_r').prop('checked', true);
-        $("#order_delivered").show();
-        $("#status_empty").show();
-    break;
+      switch(order_status) {
 
-  case 'ORDER_CANCELLED':
-        $('#order_cancelled_r').prop('checked', true);
-        $("#order_cancelled").show();
-        $("#status_empty").show();
-    break;
+        case 'ORDER_PLACED':
+              $('#order_placed_r').prop('checked', true);
+              $("#order_placed").show();
+              $("#order_conform").show();
+              $("#order_picked").show();
+              $("#order_delivered").show();
+              $("#order_cancelled").show();
+          break;
+
+        case 'ORDER_CONFIRMED_BY_CUSTOMER':
+              $('#order_conform_r').prop('checked', true);
+              $("#order_conform").show();
+              $("#order_picked").show();
+              $("#order_delivered").show();
+              $("#order_cancelled").show();
+          break;
+
+        case 'ORDER_PICKEDUP':
+              $('#order_picked_r').prop('checked', true);
+              $("#order_picked").show();
+              $("#order_delivered").show();
+              $("#order_cancelled").show();
+          break;
+
+        case 'ORDER_DELIVERED':
+              $('#order_delivered_r').prop('checked', true);
+              $("#order_delivered").show();
+              $("#status_empty").show();
+          break;
+
+        case 'ORDER_CANCELLED':
+              $('#order_cancelled_r').prop('checked', true);
+              $("#order_cancelled").show();
+              $("#status_empty").show();
+          break;
+
+
+  }
 
 }
-
 
 // update order status
   $('#radioForm input').on('change', function() {
@@ -1064,6 +1074,8 @@ function changeOrderStatus(order_status, order_id){
 
 
 }
+
+
 $(function(){
   var current = location.pathname;
   $('.sidebar-nav li a').each(function(){
