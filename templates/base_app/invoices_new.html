@@ -1,0 +1,245 @@
+{% extends "base_app/base.html" %} {% block body_block %}
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+<link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+<script>
+    $(function() {
+        $("#datepicker").datepicker();
+    });
+</script>
+<input type="hidden" id="ul_user_status" value="{% url 'base_app:change_user_status' %}" />
+<div class="float-left col-md-12 no-padding">
+
+    <div class="col-md-8 col-12 float-left no-padding">
+        
+        <ul class="page_breadcurm">
+            <li><a href="">Home</a></li>
+            <li><a href="{% url 'base_app:invoices' %}">All Invoices</a></li>
+            <li><a href="">New Invoices</a></li>
+        </ul>
+        <div class="common_container">
+
+            <div class="content_wrapper">
+
+                <div class="form-group col-12 col-md-5 pl_0 float-left">
+                    <label for="">Customer</label>
+                    <li class="nav-item dropdown select_dropdown">
+                        <a class="select_dropdown_a form-control nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Select Customer
+                        </a>
+                        <div class="dropdown-menu dropdown_menu" aria-labelledby="navbarDropdown">
+                            <span class="p_10 w-100 float-left pb_0"><input type="text" class="form-control" id="item_name" name="" placeholder="Search by Id"></span>
+                            <a class="dropdown-item" href="#">Robin Padhi (9853545441)</a>
+                            <a class="dropdown-item" href="#">Jhon K Millers (9853545441)</a>
+                            <div class="dropdown-divider"></div>
+                            <a class="dropdown-item" href="">+ New Customer</a>
+
+                        </div>
+                    </li>
+                </div>
+                <div class="form-group col-12 col-md-2 pl_0 float-left">
+                    <label for="">Invoice #</label>
+                    <input type="text" class="form-control" id="item_name" name="" placeholder="Invoice no.">
+                </div>
+                <div class="w-100 float-left mt_15 mb_15" style="background: #f5f5f5; padding: 10px 15px 0;">
+                    <div class="col-12 col-md-3 pl_0 float-left">
+                        <label for="">Invoice Date</label>
+                        <input type="text" id="datepicker" class="form-control" placeholder="Select Date">
+
+                    </div>
+                    <div class="form-group col-12 col-md-3 pl_0 float-left">
+                        <label for="">Due Date</label>
+                        <input type="text" id="datepicker" class="form-control">
+                    </div>
+                    <div class="form-group col-12 col-md-3 pl_0 float-left">
+                        <label for="exampleInputEmail1">PLACE OF SUPPLY</label>
+                        <select class="form-control" id="" name="">
+                            <option value="Maharastra">Select here</option>
+                            <option value="Maharastra">Maharastra</option>
+                            <option value="Maharastra">Kerela</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group col-12 col-md-6 pl_0 float-left">
+                    <label for="">Billing ADDRESS </label>
+                    <span class="customer_address">
+                    <button type="button" class="add_more pl_0">+ Add Billing Address</button>
+            </span>
+                </div>
+                <div class="form-group col-12 col-md-6 pl_0 float-left">
+                    <label for="">SHIPPING ADDRESS  
+                <!--Remove this Change and Remove OPTION after address added into list -->
+                <a href="" class="text_link pl_15"> Change</a> | <a href="" class="text_link">Remove</a> </label>
+                    <span class="customer_address">
+                A 305, Akul Residensy, Gunjur-Doddakannelli Rd, Kachamaranahalli, Bengaluru, Karnataka 560087
+            </span>
+                </div>
+
+
+
+
+                <div class="mt_20 float-left w-100">
+                    <table class="table invoice_table">
+                        <thead>
+                            <tr>
+                                <th style="width: 50%">Description</th>
+                                <th style="width: 5%">Quantity</th>
+                                <th style="width: 15%">Rate</th>
+                                <th style="width: 15%">TAX</th>
+                                <th style="width: 15%">Total </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>
+                                    <!-- Here is your Dropdown Product List, Type or select here -->
+                                    <li class="nav-item dropdown select_dropdown">
+                                        <input type="text" class="select_dropdown_a form-control nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" placeholder="Type or Click to select an item">
+                                        <div class="dropdown-menu dropdown_menu" aria-labelledby="navbarDropdown">
+                                            <a class="dropdown-item"> Apple Watch - <br> Price: Rs. 3,000 [Stock in Hand: 34 ] </a>
+                                            <a class="dropdown-item"> Smart Watch - <br> Price: Rs. 3,000 [Stock in Hand: 34 ] </a>
+                                            <div class="dropdown-divider"></div> <a class="dropdown-item" href="">+ Add New Items</a>
+                                        </div>
+                                    </li>
+                                    <!-- END Here is your Dropdown Product List, Type or select here -->
+                                </td>
+                                <td style=""> 12 </td>
+                                <td style=""> ₹ 3,000.00 </td>
+                                <td style="">
+                                    <select class="form-control" id="" name="">
+                                        <option value="Maharastra">GST</option>
+                                        <option value="Maharastra">GST 18%</option>
+                                        <option value="Maharastra">GST 5%</option>
+                                    </select>
+                                </td>
+                                <td style=""> ₹ 36,000.00 </td>
+
+                            </tr>
+                            <tr>
+                                <!-- ============== ROw 2-->
+                                <td style="">
+                                    <div class="w-100 float-left">
+                                        <span class="font_14" id="item_selected">Apple Watch </span>
+                                        <span class="items_edit ml_15"> <a href="">Edit</a> </span>
+                                        <span class="selected_item_des">You've never seen a watch like this. Walk in to an Apple Authorised Reseller.</span>
+                                    </div>
+
+                                </td>
+                                <td style=""> 10 </td>
+                                <td style=""> ₹ 2,000.0 </td>
+                                <td style="">
+                                    <select class="form-control" id="" name="">
+                                            <option value="Maharastra">GST</option>
+                                            <option value="Maharastra">GST 18%</option>
+                                            <option value="Maharastra">GST 5%</option>
+                                        </select>
+                                </td>
+                                <td style=""> ₹ 36,000.00 </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <!-- Here is your Dropdown Product List, Type or select here -->
+                                    <li class="nav-item dropdown select_dropdown">
+                                        <input type="text" class="select_dropdown_a form-control nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" placeholder="Type or Click to select an item">
+                                        <div class="dropdown-menu dropdown_menu" aria-labelledby="navbarDropdown">
+                                            <a class="dropdown-item" href="#"> Apple Watch - <br> Price: Rs. 3,000 [Stock in Hand: 34 ] </a>
+                                            <a class="dropdown-item" href="#"> Smart Watch - <br> Price: Rs. 3,000 [Stock in Hand: 34 ] </a>
+                                            <div class="dropdown-divider"></div> <a class="dropdown-item" href="">+ Add New Items</a>
+                                        </div>
+                                    </li>
+                                    <!-- END Here is your Dropdown Product List, Type or select here -->
+                                </td>
+                                <td style=""> 12 </td>
+                                <td style=""> ₹ 3,000.00 </td>
+                                <td style="">
+                                    <select class="form-control" id="" name="">
+                                            <option value="Maharastra">GST</option>
+                                            <option value="Maharastra">GST 18%</option>
+                                            <option value="Maharastra">GST 5%</option>
+                                        </select>
+                                </td>
+                                <td style=""> ₹ 36,000.00 </td>
+
+                            </tr>
+                        </tbody>
+                    </table>
+                    <button type="button" class="add_more pl_10">+ Add more items</button>
+                </div>
+                <div class="col-md-7 float-right col-12 mt_20">
+                    <table class="invoice_summary float-right">
+                        <tr>
+                            <td>Sub Total</td>
+                            <td>₹ 3,234.0</td>
+                        </tr>
+                        <tr>
+                            <td>Discount</td>
+                            <td>₹ 00.0</td>
+                        </tr>
+                        <tr>
+                            <td>CGST @ 9.0%</td>
+                            <td>₹ 340.0</td>
+                        </tr>
+                        <tr>
+                            <td>SGST @ 9.2%</td>
+                            <td>₹ 440.0</td>
+                        </tr>
+                        <tr>
+                            <td> <span class="font_20">Total Amount</span> </td>
+                            <td><span class="font_20">₹ 3,234.0</span></td>
+                        </tr>
+                    </table>
+                </div>
+                <!-- Terms and Condition & Customers Note ==================================================-->
+                <div class="w-100 float-left mt_15 pb_10 pt_10 mb_20" style="background: #f5f5f5; padding: 10px 15px 0;">
+                    <div class="col-md-6 float-left col-12 pl_0">
+                        <label for="">Customer Notes  </label>
+                        <textarea rows="2" class="textarea" spellcheck="false" placeholder="E.g Thank you for choosing our business/services."></textarea>
+                    </div>
+                    <div class="col-md-6 float-left col-12 pr_0">
+                        <label for="">Terms & Conditions </label>
+                        <textarea rows="4" class="textarea" spellcheck="false" placeholder="Enter the terms and conditions of your business to be displayed in your transaction"></textarea>
+                    </div>
+                </div>
+                <!-- <div class="product_dropdown_show">
+                <ul class="product_for_invoices">
+                    <li>
+                        Apple watch Rs. 34,00 Stock:23
+                    </li>
+                    <li>
+                        Apple watch Rs. 34,00 Stock:23
+                    </li>
+                </ul>
+            </div> -->
+
+
+            </div>
+            <!-- ==== == End of Content Wrapper Container ======================-->
+
+
+        </div>
+        <!--End of Common Container-->
+    </div>
+    <div class="col-md-3 float-right col-12">
+        <div class="common_container">
+            <div class="content_wrapper">
+                <button type="button" id="btn_submit" class="btn primary_btn float-right w-100 mt_10">Save & Send Invoices</button>
+                <button type="button" class="btn btn-secondary float-left w-100 mt_15" data-dismiss="modal">Save as Draft</button>
+            </div>
+        </div>
+        <div class="w-100 float-left mt_30">
+            GST & Billings
+            <div class="common_container p_15">
+                <div class="form-group">
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" value="" id="invalidCheck" required>
+                        <label class="form-check-label" for="invalidCheck"> Enable GST </label>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+</div>
+
+
+{% endblock %}

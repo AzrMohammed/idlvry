@@ -1064,3 +1064,14 @@ function changeOrderStatus(order_status, order_id){
 
 
 }
+$(function(){
+  var current = location.pathname;
+  $('.sidebar-nav li a').each(function(){
+      var $this = $(this);
+      // if the current path is like this link, make it active
+      // if($this.attr('href').indexOf(current) !== -1){
+      if ($this.attr('href') === current) {
+          $this.addClass('nav_active');
+      }
+  })
+})

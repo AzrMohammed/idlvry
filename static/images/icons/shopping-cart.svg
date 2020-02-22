@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24" height="23" viewBox="0 0 24 23">
+  <defs>
+    <clipPath id="clip-path">
+      <rect width="24" height="23" fill="none"/>
+    </clipPath>
+  </defs>
+  <g id="shopping-cart" clip-path="url(#clip-path)">
+    <circle id="Ellipse_346" data-name="Ellipse 346" cx="1" cy="1" r="1" transform="translate(8 20)" stroke-width="2" stroke="#172b4d" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+    <circle id="Ellipse_347" data-name="Ellipse 347" cx="1" cy="1" r="1" transform="translate(19 20)" stroke-width="2" stroke="#172b4d" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+    <path id="Path_458" data-name="Path 458" d="M1,1H5L7.68,14.39a2,2,0,0,0,2,1.61H19.4a2,2,0,0,0,2-1.61L23,6H6" fill="none" stroke="#172b4d" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/>
+  </g>
+</svg>
