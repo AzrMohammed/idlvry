@@ -951,7 +951,7 @@ def order_create(request):
                 if item_name == "":
 
                      proceed_order_loop = False
-                     errors_dict = {"Data":"Item Data Not Valid"}
+                     errors_dict = "Item name is not valid"
                      return HttpResponse(json.dumps({"SUCCESS":False, "RESPONSE_MESSAGE":"INVALID DATA", "ERRORS": errors_dict}),
                      content_type="application/json")
                 count_item_default+=1
@@ -977,10 +977,6 @@ def order_create(request):
             if profile_check.count() == 0:
                 user_parent_form = UserParentForm(data=post_data)
                 if user_parent_form.is_valid():
-                    print("kds")
-
-                    print("came count 0")
-                    print("came count "+post_data["username"])
 
                     profile = profile_form.save(commit=False)
 

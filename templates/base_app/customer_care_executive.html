@@ -12,7 +12,7 @@
   </div>
   <div class="col-md-8 float-right pr_0 mb_15">
     <input type="email" class="form-control float-left col-md-8 mt_15" placeholder="Search here..">
-    <button type="button"  onclick="openDaRegisterCustomerCareForm()" class="mt_15 btn primary_btn float-right">Register a Boy</button>
+    <button type="button"  onclick="openDaRegisterCustomerCareForm()" class="mt_15 btn primary_btn float-right">Register a Customer Care</button>
 
 
   </div>
@@ -114,12 +114,12 @@
 
 <!-- da view -->
 
-<div class="modal fade" id="registerBoy" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade" id="registerBoy" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
   <div class="modal-dialog model_register_boy" role="document">
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title" id="exampleModalLabel">Register a  Customer Care</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <button type="button" onclick="resetForm('register_customer_care_form')" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
@@ -240,7 +240,7 @@
 
       </div><!--BODY END HERE-->
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary float-left" data-dismiss="modal">Close</button>
+        <button type="button" onclick="resetForm('register_customer_care_form')" class="btn btn-secondary float-left" data-dismiss="modal">Close</button>
         <button type="button" id="btn_add_agent" onclick="registerAgent()" class="btn primary_btn float-right">Add Agent</button>
       </div>
     </div>
@@ -253,7 +253,7 @@
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title" id="da_view_title">Customer Care </h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <button type="button"  class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
@@ -367,7 +367,7 @@
 
       </div><!--BODY END HERE-->
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary float-left" data-dismiss="modal">Close</button>
+        <button type="button"  class="btn btn-secondary float-left" data-dismiss="modal">Close</button>
 
       </div>
     </div>

@@ -396,7 +396,8 @@ thead {
     text-transform: uppercase;
     padding: 12px 30px 12px;
 }
-.model_register_boy{max-width: 70%;}
+
+.model_order_status{max-width: 45%;}
 .model_create_order{max-width: 80%;}
 .modal-footer {
     border-top: none;
@@ -414,6 +415,9 @@ thead {
     color: #171717;
     text-shadow: none;
     opacity: inherit;
+}
+.status_title{
+  font-size: 10px
 }
 .pagination {
     float: right;
@@ -558,7 +562,7 @@ ul.product_list>li {
 .font_22 {
     font-size: 22px !important;
     line-height: normal;
-}
+
 
 .font_24 {
     font-size: 24px !important;

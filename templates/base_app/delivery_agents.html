@@ -111,12 +111,12 @@
 
 <!-- registration dialog starts -->
 
-<div class="modal fade" id="registerBoy" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade" id="registerBoy" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
   <div class="modal-dialog model_register_boy" role="document">
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title" id="exampleModalLabel">Register a Delivery Boy</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <button type="button"  onclick="resetForm('register_agent_form')" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
@@ -237,7 +237,7 @@
 
       </div><!--BODY END HERE-->
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary float-left" data-dismiss="modal">Close</button>
+        <button type="button"  onclick="resetForm('register_agent_form')" class="btn btn-secondary float-left" data-dismiss="modal">Close</button>
         <button type="button" id="btn_add_agent" onclick="registerAgent()" class="btn primary_btn float-right">Add Agent</button>
       </div>
     </div>
@@ -367,7 +367,7 @@
 
       </div><!--BODY END HERE-->
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary float-left" data-dismiss="modal">Close</button>
+        <button type="button"  class="btn btn-secondary  float-left" data-dismiss="modal">Close</button>
 
       </div>
     </div>

@@ -43,17 +43,7 @@
                 <td style="width:17%;">{{ order.order_foreign.user_customer.user_location_display }}</td>
                 <td style="width:10%;">{{ order.order_foreign.user_delivery_agent }}</td>
                 <td style="width:10%;">{{ order.order_meta.created_at }}</td>
-                <td style="width:20%;">
-                  <select class="from-control" name="order_status" id="order_status" onchange="updateOrderStatus('{{ order.order_meta.order_id }}')">
-                    {% for key, value in order_status_list.items %}
-                        {% if value == order.order_meta.status %}
-                             <option value="{{key}}" selected='selected'>{{value}}</option>
-                        {% else %}
-                             <option value="{{key}}">{{value}}</option>
-                        {% endif %}
-                    {% endfor %}
-                  </select>
-                </td>
+                <td onclick="changeOrderStatus('{{order.order_meta.status}}','{{order.order_meta.order_id}}')" style="width:20%;">{{ order.order_meta.status }} </td>
                 <td style="width:13%;">
                   <input type="hidden" value="{{ order.order_meta.slug }}" />
                   <button  onclick="getOrderDetails('{{ order.order_meta.order_id }}')" type="button" name="button" class="float-left"> Edit</button>
@@ -115,13 +105,13 @@
 
 <!-- order create alert -->
 
-<div class="modal fade" id="create_order_form_parent" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade" id="create_order_form_parent" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
     <div class="modal-dialog model_create_order" role="document">
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title" id="exampleModalLabel">Create an Order</h5>
 
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <button type="button" class="close" onclick="resetFrom('create_order_form')"data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>
           </button>
         </div>
@@ -234,7 +224,7 @@
         </div>
         <!--BODY END HERE-->
         <div class="modal-footer">
-          <button type="button" class="btn btn-secondary float-left" data-dismiss="modal">Close</button>
+          <button type="button" onclick="resetFrom('create_order_form')" class="btn btn-secondary float-left" data-dismiss="modal">Close</button>
           <button type="button" id="btn_submit" onclick="createOrder()" class="btn primary_btn float-right">Place Order</button>
           <!-- <button type="button" onclick="createOrder()" class="btn primary_btn float-right">Place Order</button> -->
         </div>
@@ -322,9 +312,6 @@
                   <label for="">UNIT</label>
                   <span class="font_14 float-left" id="measurement_unit_v" > </span>
                   </div>
-
-
-
                 </li>
               </ul>
             </div>
@@ -346,5 +333,53 @@
 <!-- da view ends  -->
 
 
+
+
+<!-- order status alert -->
+
+  <div class="modal fade" id="status_alrt"  role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog model_order_status" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Order status</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+          {% csrf_token %}
+          <div class="float-left  col-12">
+       <form id="radioForm">
+
+          <label id="order_placed"><input type="radio" name="check" id="order_placed_r" value='ORDER_PLACED' onchange=""="upadteOrderStatus()"/> ORDER_PLACED</label>
+          <label id="order_conform"><input type="radio" name="check"  id="order_conform_r" value='ORDER_CONFIRMED_BY_CUSTOMER' onchange="upadteOrderStatus()"/> ORDER_CONFIRMED_BY_CUSTOMER</label>
+          <label id="order_picked"><input type="radio" name="check" id="order_picked_r" value='ORDER_PICKEDUP' onchange="upadteOrderStatus()"/> ORDER_PICKEDUP</label>
+          <label id="order_delivered"><input type="radio" name="check" id="order_delivered_r" value='ORDER_DELIVERED' onchange="upadteOrderStatus()"> ORDER_DELIVERED</label>
+          <label id="order_cancelled"><input type="radio" name="check" id="order_cancelled_r" value='ORDER_CANCELLED' onchange=""="upadteOrderStatus()"/> ORDER_CANCELLED</label>
+           <input type="hidden" id="order_id"  name="order_id"value="" />
+       </form>
+        <br>
+        <h6 class="modal-header_title" id="status_empty">Order status cannot be changed.</h6>
+
+     </div>
+
+            <span id="error_el" class="error_msg_box"></span>
+            <span id="success_el" class="success_msg_box"></span>
+          </div>
+
+        </div>
+
+      <div>
+      </div>
+
+      </div><!--BODY END HERE-->
+      <!-- <div class="modal-footer">
+        <button type="button" class="btn btn-secondary float-left" data-dismiss="modal">Close</button>
+
+      </div> -->
+    </div>
+  </div>
+</div>
+<!-- da view ends  -->
 
 {% endblock %}

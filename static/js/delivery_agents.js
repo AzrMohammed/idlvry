@@ -38,8 +38,6 @@ var url = $('#ul_user_status').val()
            data: {"username":username, "user_status":"AT"}, // serializes the form's elements.
            success: function(data)
            {
-             // alert(JSON.stringify(data))
-            // processResponse(data)
 
            }
          });
@@ -63,8 +61,6 @@ function activateUser(username)
              data: {"username":username, "user_status":"UE"}, // serializes the form's elements.
              success: function(data)
              {
-               // alert(JSON.stringify(data))
-              // processResponse(data)
 
              }
            });
@@ -339,17 +335,17 @@ var url = form.attr('action');
  $('#error_el').val("")
  $('#success_el').val("")
 
+form_id = register_customer_care_form
     $.ajax({
            type: "POST",
            url: url,
            enctype:"multipart/form-data",
-           data: new FormData(document.getElementById("register_customer_care_form")), // serializes the form's elements.
+           data: new FormData(document.getElementById(form_id)), // serializes the form's elements.
            processData: false,
            contentType: false,
            success: function(data)
            {
-               // alert(JSON.stringify(data)); // show response from the php script.
-               processResponse(data)
+               processResponse(data, form_id)
 
            }
          });
@@ -364,18 +360,18 @@ var url = form.attr('action');
 
  $('#error_el').val("")
  $('#success_el').val("")
-
+form_id = "register_agent_form"
     $.ajax({
            type: "POST",
            url: url,
            enctype:"multipart/form-data",
-           data: new FormData(document.getElementById("register_agent_form")), // serializes the form's elements.
+           data: new FormData(document.getElementById(form_id)), // serializes the form's elements.
            processData: false,
            contentType: false,
            success: function(data)
            {
                // alert(JSON.stringify(data)); // show response from the php script.
-               processResponse(data)
+               processResponse(data, form_id)
 
            }
          });
@@ -387,31 +383,41 @@ var url = form.attr('action');
 
 
 
-function processResponse(data)
+
+
+function processResponse(data, form_id)
 {
+  // alert(form_id)
   if(data.SUCCESS)
    {
      // alert(JSON.stringify(data))
+
    $('#success_el').text(data.RESPONSE_MESSAGE)
-
-   $('#register_agent_form').trigger("reset");
-   $('#create_order_form_parent').trigger("reset");
-
+   $('#'+form_id).trigger('reset');
    window.setTimeout( location.reload(), 4000 );
    }
   else
   {
 
 
-    // alert(JSON.stringify(data.ERRORS))
+    // $('#'+form_id).trigger("reset");
     $('#error_el').text(data.ERRORS)
 
   }
 }
 
+
+function resetForm(form_id){
+
+     $('#'+form_id).trigger('reset');
+     window.setTimeout( location.reload(), 4000 );
+}
+
+
 function createOrder()
 {
-  var form = $('#create_order_form');
+  form_id = "create_order_form"
+  var form = $('#'+form_id);
 
   var formData = $(form).serialize();
   var url = form.attr('action');
@@ -423,10 +429,10 @@ function createOrder()
              data: form.serialize(), // serializes the form's elements.
              success: function(data)
              {
-               alert(JSON.stringify(data))
-               $('#create_order_form').trigger("reset");
-               window.setTimeout( location.reload(), 4000 );
-              // processResponse(data)
+               // alert(JSON.stringify(data))
+               // window.setTimeout( location.reload(), 4000 );
+
+              processResponse(data, form_id)
 
              }
            });
@@ -455,7 +461,10 @@ function openDaRegisterForm()
 function openDaOrderForm()
 {
 
+
+
   $('#create_order_form_parent').modal('toggle');
+
 
   $("#exampleModalLabel").text("Create an Order")
   $("#btn_submit").html("Place Order")
@@ -466,6 +475,7 @@ function openDaOrderForm()
 
 function openDaRegisterCustomerCareForm()
 {
+
   $('#registerBoy').modal('toggle');
 
   var id_suffix = "";
@@ -571,6 +581,7 @@ function getOrderDetails(orderid)
 
                var measurement_unit = data_order_items[i]['measurement_unit'];
                var order_status = data_order_items[i]['item_status'];
+               alert(order_status)
 
 
                var measurement_unit_val = "";
@@ -818,8 +829,8 @@ function getDaDetails()
 }
 
 
-  function updateOrderStatus(orderid){
-  var selected_order_status = $('#order_status').find(":selected").text();
+  function updateOrderStatus(orderid, order_status){
+  var selected_order_status = order_status
   console.log(selected_order_status);
 
   var csrftoken = getCookie('csrftoken');
@@ -834,8 +845,7 @@ function getDaDetails()
              data: {"order_status":selected_order_status, "order_id":orderid}, // serializes the form's elements.
              success: function(data)
              {
-               alert(JSON.stringify(data))
-              // processResponse(data)
+              processResponse(data, 'radioForm')
              }
            });
 }
@@ -975,5 +985,82 @@ function viewOrderItemComponent()
   html_content += '</li>';
 
   $("#ole_view").append(html_content);
+
+}
+
+
+
+function changeOrderStatus(order_status, order_id){
+
+
+  $('#order_id').val(order_id);
+
+  $('#status_alrt').modal('toggle');
+
+  $("#order_placed").hide();
+  $("#order_conform").hide();
+  $("#order_picked").hide();
+  $("#order_delivered").hide();
+  $("#order_cancelled").hide();
+  $("#status_empty").hide();
+
+
+  switch(order_status) {
+
+  case 'ORDER_PLACED':
+        $('#order_placed_r').prop('checked', true);
+        $("#order_placed").show();
+        $("#order_conform").show();
+        $("#order_picked").show();
+        $("#order_delivered").show();
+        $("#order_cancelled").show();
+    break;
+
+  case 'ORDER_CONFIRMED_BY_CUSTOMER':
+        $('#order_conform_r').prop('checked', true);
+        $("#order_conform").show();
+        $("#order_picked").show();
+        $("#order_delivered").show();
+        $("#order_cancelled").show();
+    break;
+
+  case 'ORDER_PICKEDUP':
+        $('#order_picked_r').prop('checked', true);
+        $("#order_picked").show();
+        $("#order_delivered").show();
+        $("#order_cancelled").show();
+    break;
+
+  case 'ORDER_DELIVERED':
+        $('#order_delivered_r').prop('checked', true);
+        $("#order_delivered").show();
+        $("#status_empty").show();
+    break;
+
+  case 'ORDER_CANCELLED':
+        $('#order_cancelled_r').prop('checked', true);
+        $("#order_cancelled").show();
+        $("#status_empty").show();
+    break;
+
+}
+
+
+// update order status
+  $('#radioForm input').on('change', function() {
+
+     var status=  $('input[name=check]:checked', '#radioForm').val();
+     var order_id =$('input[name=order_id]', '#radioForm').val();
+
+     updateOrderStatus(order_id,status)
+
+
+});
+
+
+
+
+
+
 
 }
