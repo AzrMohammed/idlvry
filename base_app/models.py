@@ -83,7 +83,7 @@ class ItemMeasuementUnit(models.Model):
 
 
 
-class Order(models.Model):  
+class Order(models.Model):
 
 
     slug = models.SlugField(unique=True, max_length=8)
@@ -101,6 +101,14 @@ class Order(models.Model):
         return str(self.order_id)
 
 
+
+class OrderEvent(models.Model):
+    slug = models.SlugField(unique=True, max_length=8)
+    order = models.ForeignKey(Order, on_delete=models.CASCADE)
+    status_note = models.CharField(max_length=200, default=dbconstants.VAL_STR_DEFAULT, null=True)
+    status = models.CharField(max_length=3, choices=dbconstants.ORDER_EVENT_STATUS,  default=dbconstants.ORDER_PLACED)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
 
 
