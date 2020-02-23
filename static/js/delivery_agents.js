@@ -390,23 +390,20 @@ function processResponse(data, form_id)
   // alert(form_id)
   if(data.SUCCESS)
    {
+     console.log('success');
+
      // alert(JSON.stringify(data))
 
 
    $('#success_el').text(data.RESPONSE_MESSAGE)
    $('#'+form_id).trigger('reset');
-
-   window.setTimeout(
-     function() {
-         location.reload();
-         successMsgAlert(data.RESPONSE_MESSAGE, true);
-    } , 4000 );
-
-
+   // window.setTimeout( location.reload(), 4000 );
+   window.location.reload();
+    successMsgAlert(data.RESPONSE_MESSAGE, true);
    }
   else
   {
-
+ console.log('error');
 
     // $('#'+form_id).trigger("reset");
     $('#error_el').text(data.ERRORS)
@@ -837,6 +834,8 @@ function getDaDetails()
 }
 function updateOrderStatus(orderid, order_status){
 
+
+
     var selected_order_status = order_status
     console.log(selected_order_status);
 
@@ -999,9 +998,7 @@ function viewOrderItemComponent()
 
 function successMsgAlert(suceess_message, is_show){
 
-  $('#alert').show();
-
-
+  $('#alert').fadeIn(3000);
 
 
   if(is_show){
@@ -1010,8 +1007,15 @@ function successMsgAlert(suceess_message, is_show){
     html_content += '<span class="succ_text">'+suceess_message+'</span>';
     html_content += '</div>';
     $('#alert').append(html_content);
-
   }
+
+  setTimeout(function() {
+
+
+     $('#alert').fadeOut(3000)
+ }, 10000);
+
+
 
 
 }
@@ -1030,9 +1034,9 @@ function errorMsgAlert(error_message, is_show){
 
   }
 
-  setTimeout(function() {
-     $('#alert').hide();
- }, 3000);
+  $('#alert').fadeIn('slow').delay(3000).fadeOut('slow');
+
+
 
 }
 
@@ -1040,17 +1044,16 @@ function errorMsgAlert(error_message, is_show){
 function changeOrderStatus(order_status, order_id){
 
 
-  if ( order_status =='ORDER_DELIVERED' ) {
+  if ( order_status =='ORDER_DELIVERED' || order_status =='ORDER_CANCELLED') {
     $('#alert').show();
 
      errorMsgAlert('Order status cannot be changed',true);
 
      setTimeout(function() {
         $('#alert').hide();
-     }, 3000);
+    }, 3000);
 
   } else {
-
 
   $('#order_id').val(order_id);
 
@@ -1108,7 +1111,6 @@ $('#radioForm input').on('change', function() {
 
    var status=  $('input[name=check]:checked', '#radioForm').val();
    var order_id =$('input[name=order_id]', '#radioForm').val();
-
    updateOrderStatus(order_id,status)
 
 });
@@ -1125,6 +1127,12 @@ $('#radioForm input').on('change', function() {
 
 }
 
+
+function getOrderDetailByPhone(){
+
+  var phone_number = $('#navbarDropdown').val();
+  alert(phone_number)
+}
 
 
 

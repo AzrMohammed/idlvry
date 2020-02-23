@@ -175,7 +175,15 @@ $('#datepicker').datepicker({ dateFormat: 'dd/mm/yy' }).val();
               </div>
               <div class="form-group col-md-6 pl_0 float-left">
                 <label for="exampleInputEmail1">Phone Number</label>
-                <input type="number" max_length="10" class="form-control" name="phone_primary" id="phone_primary"  placeholder="10 digit number">
+                <li class="nav-item dropdown select_dropdown">
+                    <input type="text" class="select_dropdown_a form-control nav-link dropdown-toggle" href="#"  onchange="getOrderDetailByPhone(this)" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" placeholder="Enter phone number">
+                    <div class="dropdown-menu dropdown_menu" aria-labelledby="navbarDropdown">
+                    <a class="dropdown-item"> Apple Watch - <br> Price: Rs. 3,000 [Stock in Hand: 34 ] </a>
+                    <a class="dropdown-item"> Smart Watch - <br> Price: Rs. 3,000 [Stock in Hand: 34 ] </a>
+                    <div class="dropdown-divider"></div> <a class="dropdown-item" href="">+ Add New Items</a>
+                   </div>
+                </li>
+                <!-- <input type="number" max_length="10" class="form-control" name="phone_primary" id="phone_primary"  placeholder="10 digit number"> -->
               </div>
               <div class="form-group col-md-6 pl_0 float-left">
                 <label for="exampleInputEmail1">Delivery Locality</label>
