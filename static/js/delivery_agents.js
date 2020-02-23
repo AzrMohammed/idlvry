@@ -392,9 +392,17 @@ function processResponse(data, form_id)
    {
      // alert(JSON.stringify(data))
 
+
    $('#success_el').text(data.RESPONSE_MESSAGE)
    $('#'+form_id).trigger('reset');
-   window.setTimeout( location.reload(), 4000 );
+
+   window.setTimeout(
+     function() {
+         location.reload();
+         successMsgAlert(data.RESPONSE_MESSAGE, true);
+    } , 4000 );
+
+
    }
   else
   {
@@ -827,27 +835,27 @@ function getDaDetails()
        });
 
 }
+function updateOrderStatus(orderid, order_status){
 
+    var selected_order_status = order_status
+    console.log(selected_order_status);
 
-  function updateOrderStatus(orderid, order_status){
-  var selected_order_status = order_status
-  console.log(selected_order_status);
+    var csrftoken = getCookie('csrftoken');
 
-  var csrftoken = getCookie('csrftoken');
+    var url = $('#url_order_status').val()
+    console.log(url);
 
-  var url = $('#url_order_status').val()
-  console.log(url);
+        $.ajax({
+               type: "POST",
+               url: url,
+               headers: {"X-CSRFToken": csrftoken},
+               data: {"order_status":selected_order_status, "order_id":orderid}, // serializes the form's elements.
+               success: function(data)
+               {
+                processResponse(data, 'radioForm')
+               }
+             });
 
-      $.ajax({
-             type: "POST",
-             url: url,
-             headers: {"X-CSRFToken": csrftoken},
-             data: {"order_status":selected_order_status, "order_id":orderid}, // serializes the form's elements.
-             success: function(data)
-             {
-              processResponse(data, 'radioForm')
-             }
-           });
 }
 
 function getUserOrderDetails(username){
@@ -989,85 +997,127 @@ function viewOrderItemComponent()
 }
 
 
+function successMsgAlert(suceess_message, is_show){
+
+  $('#alert').show();
+
+
+
+
+  if(is_show){
+    var html_content = '<div>';
+    html_content += '<div class="success_box" style="display: block;">';
+    html_content += '<span class="succ_text">'+suceess_message+'</span>';
+    html_content += '</div>';
+    $('#alert').append(html_content);
+
+  }
+
+
+}
+
+function errorMsgAlert(error_message, is_show){
+
+  $('#alert').show();
+
+
+  if(is_show){
+    var html_content = '<div>';
+    html_content += '<div class="error_box" style="display:block ;">';
+    html_content += '<span class="error_text">'+error_message+'</span>';
+    html_content += '</div>';
+    $('#alert').append(html_content);
+
+  }
+
+  setTimeout(function() {
+     $('#alert').hide();
+ }, 3000);
+
+}
+
 
 function changeOrderStatus(order_status, order_id){
 
 
+  if ( order_status =='ORDER_DELIVERED' ) {
+    $('#alert').show();
 
-  if ( order_status == 'ORDER_CANCELLED' || order_status == 'ORDER_DELIVERED' ){
+     errorMsgAlert('Order status cannot be changed',true);
 
-    $('#error_alrt').model(toggle);
+     setTimeout(function() {
+        $('#alert').hide();
+     }, 3000);
 
-  }else {
-
-
-      $('#order_id').val(order_id);
-
-      $('#status_alrt').modal('toggle');
-
-      $("#order_placed").hide();
-      $("#order_conform").hide();
-      $("#order_picked").hide();
-      $("#order_delivered").hide();
-      $("#order_cancelled").hide();
-      $("#status_empty").hide();
+  } else {
 
 
-      switch(order_status) {
+  $('#order_id').val(order_id);
 
-        case 'ORDER_PLACED':
-              $('#order_placed_r').prop('checked', true);
-              $("#order_placed").show();
-              $("#order_conform").show();
-              $("#order_picked").show();
-              $("#order_delivered").show();
-              $("#order_cancelled").show();
-          break;
+  $('#status_alrt').modal('toggle');
 
-        case 'ORDER_CONFIRMED_BY_CUSTOMER':
-              $('#order_conform_r').prop('checked', true);
-              $("#order_conform").show();
-              $("#order_picked").show();
-              $("#order_delivered").show();
-              $("#order_cancelled").show();
-          break;
-
-        case 'ORDER_PICKEDUP':
-              $('#order_picked_r').prop('checked', true);
-              $("#order_picked").show();
-              $("#order_delivered").show();
-              $("#order_cancelled").show();
-          break;
-
-        case 'ORDER_DELIVERED':
-              $('#order_delivered_r').prop('checked', true);
-              $("#order_delivered").show();
-              $("#status_empty").show();
-          break;
-
-        case 'ORDER_CANCELLED':
-              $('#order_cancelled_r').prop('checked', true);
-              $("#order_cancelled").show();
-              $("#status_empty").show();
-          break;
+  $("#order_placed").hide();
+  $("#order_conform").hide();
+  $("#order_picked").hide();
+  $("#order_delivered").hide();
+  $("#order_cancelled").hide();
+  $("#status_empty").hide();
 
 
-  }
+  switch(order_status) {
 
+    case 'ORDER_PLACED':
+          $('#order_placed_r').prop('checked', true);
+          $("#order_placed").show();
+          $("#order_conform").show();
+          $("#order_picked").show();
+          $("#order_delivered").show();
+          $("#order_cancelled").show();
+      break;
+
+    case 'ORDER_CONFIRMED_BY_CUSTOMER':
+          $('#order_conform_r').prop('checked', true);
+          $("#order_conform").show();
+          $("#order_picked").show();
+          $("#order_delivered").show();
+          $("#order_cancelled").show();
+      break;
+
+    case 'ORDER_PICKEDUP':
+          $('#order_picked_r').prop('checked', true);
+          $("#order_picked").show();
+          $("#order_delivered").show();
+          $("#order_cancelled").show();
+      break;
+
+    case 'ORDER_DELIVERED':
+          $('#order_delivered_r').prop('checked', true);
+          $("#order_delivered").show();
+          $("#status_empty").show();
+      break;
+
+    case 'ORDER_CANCELLED':
+          $('#order_cancelled_r').prop('checked', true);
+          $("#order_cancelled").show();
+          $("#status_empty").show();
+      break;
 }
 
-// update order status
-  $('#radioForm input').on('change', function() {
 
-     var status=  $('input[name=check]:checked', '#radioForm').val();
-     var order_id =$('input[name=order_id]', '#radioForm').val();
+$('#radioForm input').on('change', function() {
 
-     updateOrderStatus(order_id,status)
+   var status=  $('input[name=check]:checked', '#radioForm').val();
+   var order_id =$('input[name=order_id]', '#radioForm').val();
 
+   updateOrderStatus(order_id,status)
 
 });
 
 
+}
+
+
+
 
 
 
@@ -1076,14 +1126,24 @@ function changeOrderStatus(order_status, order_id){
 }
 
 
-$(function(){
-  var current = location.pathname;
-  $('.sidebar-nav li a').each(function(){
-      var $this = $(this);
-      // if the current path is like this link, make it active
-      // if($this.attr('href').indexOf(current) !== -1){
-      if ($this.attr('href') === current) {
-          $this.addClass('nav_active');
-      }
-  })
-})
+
+
+// update order status
+
+
+
+
+
+
+
+// $(function(){
+//   var current = location.pathname;
+//   $('.sidebar-nav li a').each(function(){
+//       var $this = $(this);
+//       // if the current path is like this link, make it active
+//       // if($this.attr('href').indexOf(current) !== -1){
+//       if ($this.attr('href') === current) {
+//           $this.addClass('nav_active');
+//       }
+//   })
+// })

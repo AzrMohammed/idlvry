@@ -82,7 +82,6 @@ $('#datepicker').datepicker({ dateFormat: 'dd/mm/yy' }).val();
                 <td style="width:15%;">{{ order.order_foreign.user_customer.user_location_display }}</td>
                 <td style="width:10%;">{{ order.order_foreign.user_delivery_agent }}</td>
                 <td style="width:10%;">{{ order.order_meta.created_at }}</td>
-
                 <td onclick="changeOrderStatus('{{order.order_meta.status}}','{{order.order_meta.order_id}}')" style="width:20%;">{{ order.order_meta.status }} </td>
                 <!-- <td style="width:13%;">
 
@@ -441,8 +440,6 @@ function printDiv() {
           <label id="order_cancelled"><input type="radio" name="check" id="order_cancelled_r" value='ORDER_CANCELLED' onchange=""="upadteOrderStatus()"/> ORDER_CANCELLED</label>
            <input type="hidden" id="order_id"  name="order_id"value="" />
        </form>
-        <br>
-        <h6 class="modal-header_title" id="status_empty">Order status cannot be changed.</h6>
 
      </div>
 
@@ -467,16 +464,14 @@ function printDiv() {
 
 
 <!-- sucess_message -->
-<div class="modal fade" id="success_alrt"  role="dialog" aria-hidden="true">
-<div class="success_box" style="display: block;">
+<!-- <div class="success_box" style="display: block;">
   <span class="succ_text">Thank you</span>
-</div>
-</div>
+</div> -->
 
 <!-- error messgae -->
-<div class="modal fade" id="error_alrt"  role="dialog"  aria-hidden="true">
+<!-- <div class="modal fade" id="error_alrt"  role="dialog"  aria-hidden="true">
 <div class="error_box" style="display:block ;">
   <span class="error_text">Error Box </span>
-</div>
+</div> -->
 
 {% endblock %}
