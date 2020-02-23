@@ -1,5 +1,5 @@
 from django.contrib import admin
-from base_app.models import UserProfileInfo, Order, OrderItem, ItemMeasuementUnit, Business, DaProfile
+from base_app.models import UserProfileInfo, Order, OrderItem, ItemMeasuementUnit, Business, DaProfile, OrderEvent
 # Register your models here.
 
 
@@ -8,6 +8,7 @@ admin.site.register(DaProfile)
 admin.site.register(Business)
 admin.site.register(Order)
 admin.site.register(OrderItem)
+admin.site.register(OrderEvent)
 admin.site.register(ItemMeasuementUnit)
 
 # admin.site.register(Webpage)

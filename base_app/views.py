@@ -14,7 +14,7 @@ from base_app.utils import random_string_generator
 import string
 from base_app import constants, dbconstants
 # from django.db import models
-from base_app.models import UserProfileInfo, Order, OrderItem, ItemMeasuementUnit, DaProfile
+from base_app.models import UserProfileInfo, Order, OrderItem, ItemMeasuementUnit, DaProfile, OrderEvent
 from django.core import serializers
 # Create your views here.
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
@@ -49,40 +49,6 @@ def change_user_status(request):
 
     return HttpResponse(json.dumps({"SUCCESS":True, "RESPONSE_MESSAGE":"Status updated"}),
     content_type="application/json")
-
-
-def change_order_status(request):
-
-    orderid = request.POST['order_id']
-    orderstatus = request.POST['order_status']
-
-    order_obj = Order.objects.get(order_id=orderid)
-    updated_order_status=""
-    for key, value in dbconstants.ORDER_STATUS:
-        if value == orderstatus:
-            updated_order_status= key
-    order_obj.status = updated_order_status
-    order_obj.save()
-
-    order_items = OrderItem.objects.filter(order = order_obj)
-
-
-    for order_item in order_items:
-        try:
-         updated_order_item_status = dbconstants.ORDER_ITEM_STATUS_CHANGE_BY_ORDER_STATUS_DIC[updated_order_status]
-         if updated_order_item_status:
-             print(order_item.status)
-             order_item.status = updated_order_item_status;
-             order_item.save()
-        except:
-             print("An exception occurred")
-
-
-
-    return HttpResponse(json.dumps({"SUCCESS":True, "RESPONSE_MESSAGE":"Order status updated"}),
-    content_type="application/json")
-
-
 
 
 
@@ -606,10 +572,8 @@ def get_user_order_details(request):
             order_parent_set['updated_at'] = order_temp.updated_at
 
 
-            print(order_parent_set)
 
             order_list_final.append(order_parent_set)
-            print(order_list_final)
 
         return HttpResponse(json.dumps({"SUCCESS":True, "RESPONSE_MESSAGE":"DATA FETCHED", "user_order_detail": order_list_final }, indent=4, sort_keys=True, default=str),
             content_type="application/json")
@@ -717,44 +681,7 @@ def get_order_details(request):
         # getting status text
         order_obj.status = dbconstants.ORDER_STATUS_DIC[order_obj.status]
 
-
-        # .only('e_name','e_date')
-
         order_foreign = {}
-        # order_foreign['user_customer'] = serializers.serialize('json', [user_customer])
-        # order_foreign['user_delivery_agent'] = serializers.serialize('json', [user_delivery_agent])
-
-        # print(order_foreign)
-        #
-        #
-        # order_parent_set = {}
-        # order_parent_set['order_meta'] = order_temp
-        # order_parent_set['order_foreign'] =  order_foreign
-        #
-        # order_list_final.append(order_parent_set)
-
-        # user_obj = User.objects.get(username=request.POST["username"])
-        # user_profile = UserProfileInfo.objects.get(user=user_obj)
-        # da_profile = DaProfile.objects.get(user=user_profile)
-        # user_obj_s = serializers.serialize('json', [user_obj])
-        # user_profile_s = serializers.serialize('json', [user_profile])
-
-        # user_list_final = []
-        # user_list_final.append(order_parent_set)
-        # order_details_l = serializers.serialize('json', order_parent_set)
-        #
-
-        # user_customer_s = serializers.serialize('json', [user_customer])
-        # user_delivery_agent_s = serializers.serialize('json', [user_delivery_agent])
-        # order_meta_s = serializers.serialize('json', [order_temp])
-
-        # list_result = [entry for entry in queryset]
-
-        # print(orders_dict['order_id'])
-        # for order_id in list_result:
-            # print("==="+order_id)
-
-        # return HttpResponse(json.dumps({"SUCCESS":True, "RESPONSE_MESSAGE":"DATA FETCHED", "user_customer":user_customer_s, "user_delivery_agent":user_delivery_agent_s, "order_meta":list(order_temp) }),
         return HttpResponse(json.dumps({"SUCCESS":True, "RESPONSE_MESSAGE":"DATA FETCHED",  "order_meta":orders_dict, "order_item": user_order_item_arr, 'user_customer':customer_details, 'user_delivery_agent':delivery_agent_details }, indent=4, sort_keys=True, default=str),
 
             content_type="application/json")
@@ -925,6 +852,58 @@ def createUserName(username):
         user_check = User.objects.filter(username=username_f)
         count = count+1
     return username_f
+
+
+
+def change_order_status(request):
+
+    orderid = request.POST['order_id']
+    orderstatus = request.POST['order_status']
+
+    order_obj = Order.objects.get(order_id=orderid)
+    updated_order_status=""
+    for key, value in dbconstants.ORDER_STATUS:
+        if value == orderstatus:
+            updated_order_status= key
+    order_obj.status = updated_order_status
+    order_obj.save()
+    update_order_event(order_obj, updated_order_status)
+    order_items = OrderItem.objects.filter(order = order_obj)
+
+
+    for order_item in order_items:
+        try:
+         updated_order_item_status = dbconstants.ORDER_ITEM_STATUS_CHANGE_BY_ORDER_STATUS_DIC[updated_order_status]
+         if updated_order_item_status:
+             print(order_item.status)
+             order_item.status = updated_order_item_status;
+             order_item.save()
+        except:
+             print("An exception occurred")
+    return HttpResponse(json.dumps({"SUCCESS":True, "RESPONSE_MESSAGE":"Order status updated"}),
+    content_type="application/json")
+
+# def update_order_event(order_obj, updated_order_status):
+#
+#
+#     return HttpResponse(json.dumps({"SUCCESS":True, "RESPONSE_MESSAGE":"Order status updated"}),
+#     content_type="application/json")
+
+def update_order_event(order, event_type):
+    print("status event")
+    print(event_type)
+    order_event_model =  OrderEvent()
+    # updated_order_item_status = dbconstants.ORDER_EVENT_STATUS_DIC[event_type]
+    order_event_model.status = event_type
+    order_event_model.order = order
+    order_event_model.slug = unique_slug_generator(order_event_model)
+    order_event_model.save()
+
+    # smsbase.sendOrderCreationMessage(customer_location = customer_location, order_number = order_model.order_id, order_items =order_items, customer_name = profile.user , customer_mobile = profile.phone_primary, da_name = user_del.username, da_mobile = da_profile.phone_primary)
+
+    return "SUCCESS"
+
+
 
 @login_required
 def order_create(request):
@@ -1128,6 +1107,7 @@ def order_create(request):
                     order_item_model.save()
                     count_item_default+=1
 
+                    update_order_event(order, dbconstants.ORDER_E_PLACED)
                 else :
                     print("item false")
                     proceed_order_loop = False
@@ -1143,7 +1123,7 @@ def order_create(request):
 
 
 
-            # smsbase.sendOrderCreationMessage(customer_location = customer_location, order_number = order_model.order_id, order_items =order_items, customer_name = profile.user , customer_mobile = profile.phone_primary, da_name = user_del.username, da_mobile = da_profile.phone_primary)
+            smsbase.sendOrderCreationMessage(customer_location = customer_location, order_number = order_model.order_id, order_items =order_items, customer_name = profile.user , customer_mobile = profile.phone_primary, da_name = user_del.username, da_mobile = da_profile.phone_primary)
 
             return HttpResponse(json.dumps({"SUCCESS":True, "RESPONSE_MESSAGE":success_message}),
             content_type="application/json")
